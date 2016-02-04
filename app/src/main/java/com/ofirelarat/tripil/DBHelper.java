@@ -9,7 +9,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_USERS =
             "CREATE TABLE " + DBContract.DBUser.TABLE_NAME + "(" +
                     DBContract.DBUser._ID + " INTEGER PRIMARY KEY," +
-                    DBContract.DBUser.COLUMN_NAME_USERNAME + "TEXT NOT NULL" +
+                    DBContract.DBUser.COLUMN_NAME_USERNAME + "TEXT NOT NULL," +
                     DBContract.DBUser.COLUMN_NAME_FIRST_NAME + " TEXT," +
                     DBContract.DBUser.COLUMN_NAME_LAST_NAME + " TEXT," +
                     DBContract.DBUser.COLUMN_NAME_PASSWORD + " TEXT NOT NULL," +
@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TRIPS =
             "CREATE TABLE " + DBContract.DBTrip.TABLE_NAME + "(" +
                     DBContract.DBTrip._ID + " INTEGER PRIMARY KEY," +
-                    DBContract.DBTrip.COLUMN_NAME_USERNAME + "TEXT NOT NULL" +
+                    DBContract.DBTrip.COLUMN_NAME_USERNAME + "TEXT NOT NULL," +
                     DBContract.DBTrip.COLUMN_NAME_ARRAIVAL + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_RETURN + " TEXT, " +
                     DBContract.DBTrip.COLUMN_NAME_DAYS + " TEXT," +
