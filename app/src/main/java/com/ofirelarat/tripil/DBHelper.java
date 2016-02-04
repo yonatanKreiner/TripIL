@@ -31,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     DBContract.DBTrip.COLUMN_NAME_ATTRACTION + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_STARS + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE + " TEXT," +
-                    DBContract.DBTrip.COLUMN_NAME_DESCRIPTION + " TEXT" + ")";
+                    DBContract.DBTrip.COLUMN_NAME_DESCRIPTION + " TEXT)";
 
     private static final String SQL_DELETE_TRIPS =
             "DROP TABLE IF EXISTS " + DBContract.DBTrip.TABLE_NAME;
