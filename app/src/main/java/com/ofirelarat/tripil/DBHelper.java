@@ -1,15 +1,17 @@
 package com.ofirelarat.tripil;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
+    SQLiteDatabase db;
 
     private static final String SQL_CREATE_USERS =
             "CREATE TABLE " + DBContract.DBUser.TABLE_NAME + "(" +
-                    DBContract.DBUser._ID + " INTEGER PRIMARY KEY," +
-                    DBContract.DBUser.COLUMN_NAME_USERNAME + "TEXT NOT NULL," +
+                    DBContract.DBUser.COLUMN_NAME_USERNAME + "TEXT PRIMARY KEY," +
                     DBContract.DBUser.COLUMN_NAME_FIRST_NAME + " TEXT," +
                     DBContract.DBUser.COLUMN_NAME_LAST_NAME + " TEXT," +
                     DBContract.DBUser.COLUMN_NAME_PASSWORD + " TEXT NOT NULL," +
@@ -56,5 +58,130 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+    public void insertTrip(Trip trip) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        String query = "SELECT * FROM " + DBContract.DBTrip.TABLE_NAME;
+        Cursor cursor = db.rawQuery(query,null);
+        int count = cursor.getCount();
+
+        values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
+        values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
+        values.put(DBContract.DBTrip.COLUMN_NAME_RETURN, trip.getReturnDate());
+        values.put(DBContract.DBTrip.COLUMN_NAME_DAYS, trip.getArea());
+        values.put(DBContract.DBTrip.COLUMN_NAME_AREA, trip.getDays());
+        values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, trip.getHotels());
+        values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, trip.getAttractions());
+        values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
+        values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
+        values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
+
+        long newRowId = db.insert(DBContract.DBTrip.TABLE_NAME, null, values);
+        db.close();
+    }
+
+    //delete trip from the database
+    public void DeleteTrip(String trip_id){
+        db = this.getReadableDatabase();
+        db.execSQL("DELETE FROM " + DBContract.DBTrip.TABLE_NAME + "WHERE" + DBContract.DBTrip._ID + "=\"" + trip_id + "\";");
+        db.close();
+    }
+
+    //delete user from database
+    public void DeleteUser(String userName){
+        db = this.getReadableDatabase();
+        db.execSQL("DELETE FROM " + DBContract.DBUser.TABLE_NAME + " WHERE " +
+                DBContract.DBUser.COLUMN_NAME_USERNAME + "=\"" + userName + "\";");
+        db.close();
+    }
+
+    //find trip by user name
+    public Cursor findTrip(String userName){
+        db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + DBContract.DBTrip.TABLE_NAME + " WHERE " + DBContract.DBTrip._ID + "=" + userName + "", null);
+        db.close();
+
+        return res;
+    }
+
+    //find user
+    public Cursor findUser(String userName,String password){
+        db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + DBContract.DBUser.TABLE_NAME + " WHERE " +
+                DBContract.DBUser.COLUMN_NAME_USERNAME + "=" + userName + "and" + DBContract.DBUser.COLUMN_NAME_PASSWORD + "=" + password + "", null);
+        db.close();
+
+        return res;
+    }
+
+    // check if user is already exist
+    public Cursor isExistUser(String userName){
+        db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + DBContract.DBUser.TABLE_NAME + " WHERE " + DBContract.DBUser.COLUMN_NAME_USERNAME + "=" + userName, null);
+        db.close();
+
+        return res;
+    }
+
+    //get a user pass by  name
+    public String getPassUser(String username){
+        db = getReadableDatabase();
+        String query = "SELECT " + DBContract.DBUser.COLUMN_NAME_USERNAME + "," +
+                DBContract.DBUser.COLUMN_NAME_PASSWORD + " FROM " + DBContract.DBUser.TABLE_NAME;
+        Cursor cursor = db.rawQuery(query,null);
+        String pass = "not exist";
+        String name;
+
+        if(cursor.moveToFirst())
+        {
+            do{
+                name = cursor.getString(0);
+
+                if(name.equals(username)){
+                    pass = cursor.getString(1);
+
+                    break;
+                }
+            }  while(cursor.moveToNext());
+
+        }
+
+        return pass;
+    }
+
+    public void AddUser(User user) {
+        db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
+        values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
+        values.put(DBContract.DBUser.COLUMN_NAME_FIRST_NAME, user.firstName);
+        values.put(DBContract.DBUser.COLUMN_NAME_LAST_NAME, user.lastName);
+        values.put(DBContract.DBUser.COLUMN_NAME_MAIL, user.mail);
+        values.put(DBContract.DBUser.COLUMN_NAME_PHONE, user.phone);
+
+        long newRowId = db.insert(DBContract.DBUser.TABLE_NAME, null, values);
+        db.close();
+    }
+
+    //update trip
+    public void updateTrip(Trip trip){
+        ContentValues values = new ContentValues();
+        values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
+        values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
+        values.put(DBContract.DBTrip.COLUMN_NAME_RETURN, trip.getReturnDate());
+        values.put(DBContract.DBTrip.COLUMN_NAME_DAYS, trip.getArea());
+        values.put(DBContract.DBTrip.COLUMN_NAME_AREA, trip.getDays());
+        values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, trip.getHotels());
+        values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, trip.getAttractions());
+        values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
+        values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
+        values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
+
+        db = getWritableDatabase();
+        db.update(DBContract.DBTrip.TABLE_NAME, values, DBContract.DBTrip._ID + "=" + trip.getId(), null);
+        db.close();
     }
 }

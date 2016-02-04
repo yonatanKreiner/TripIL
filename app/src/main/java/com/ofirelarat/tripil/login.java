@@ -16,7 +16,7 @@ import android.widget.Toast;
 import java.sql.SQLException;
 
 public class login extends AppCompatActivity {
-    MyDBHandler dbHandler;
+    DBHelper db;
     SharedPreferences sharedPreferences;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
@@ -25,9 +25,7 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        dbHandler = new MyDBHandler(this);
-
+        db = new DBHelper(this);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
@@ -42,7 +40,8 @@ public class login extends AppCompatActivity {
      //   if(extras!=null) {
        //     int Value = extras.getInt("id");
          //   if (Value > 0) {
-                String Upass = dbHandler.getPassUser(userName.getText().toString());
+                String Upass = db.getPassUser(userName.getText().toString());
+
                 if (Upass.equals("not exist"))
                     Toast.makeText(this, "user not exist", Toast.LENGTH_LONG).show();
                 else if (Upass.equals(pass.getText().toString())) {

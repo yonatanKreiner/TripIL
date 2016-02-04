@@ -14,14 +14,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class register extends AppCompatActivity {
-    SQLiteDatabase db;
+    DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        DBHelper mDbHelper = new DBHelper(this);
-        db = mDbHelper.getWritableDatabase();
+        db = new DBHelper(this);
     }
 
     public void onClickRegister(View view){
@@ -42,20 +41,7 @@ public class register extends AppCompatActivity {
 
      //  String p= dbHandler.getPassUser(userName.getText().toString());
      // if(p.equals("not exist")) {
-            ContentValues values = new ContentValues();
-            values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
-            values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
-            values.put(DBContract.DBUser.COLUMN_NAME_FIRST_NAME, user.firstName);
-            values.put(DBContract.DBUser.COLUMN_NAME_LAST_NAME, user.lastName);
-            values.put(DBContract.DBUser.COLUMN_NAME_MAIL, user.mail);
-            values.put(DBContract.DBUser.COLUMN_NAME_PHONE, user.phone);
-
-            long newRowId;
-            newRowId = db.insert(
-                    DBContract.DBUser.TABLE_NAME,
-                    "NULL",
-                    values);
-
+            db.AddUser(user);
             Intent i = new Intent(this, trips.class);
             startActivity(i);
       //  }
