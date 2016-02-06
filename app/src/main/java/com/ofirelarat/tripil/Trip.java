@@ -13,9 +13,6 @@ public class Trip {
     String travelGuide;
     int stars;
     String description;
-
-
-
     String[] pictures;
 
     public Trip() {
