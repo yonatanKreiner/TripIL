@@ -7,13 +7,49 @@ public class Trip {
     String username;
     String arrivalDate;
     String returnDate;
-    int days;
     String area;
-    String hotels;
-    String attractions;
+    String[] hotels;
+    String[] attractions;
     String travelGuide;
     int stars;
-    String Description;
+    String description;
+
+    public Trip() {
+        this.stars = 0;
+    }
+
+    public Trip(String id, String username, String arrivalDate, String returnDate) {
+        this();
+        this.id = id;
+        this.username = username;
+        this.arrivalDate = arrivalDate;
+        this.returnDate = returnDate;
+    }
+
+    public Trip(String id, String username, String arrivalDate, String returnDate, String area) {
+        this(id, username, arrivalDate, returnDate);
+        this.area = area;
+    }
+
+    public Trip(String id, String username, String arrivalDate, String returnDate, String area, String hotels) {
+        this(id, username, arrivalDate, returnDate, area);
+        this.hotels = hotels.split(",");
+    }
+
+    public Trip(String id, String username, String arrivalDate, String returnDate, String area, String hotels, String attractions) {
+        this(id, username, arrivalDate, returnDate,area, hotels);
+        this.attractions = attractions.split(",");
+    }
+
+    public Trip(String id, String username, String arrivalDate, String returnDate, String area, String hotels, String attractions, String travelGuide) {
+        this(id, username, arrivalDate, returnDate, area, hotels, attractions);
+        this.travelGuide = travelGuide;
+    }
+
+    public Trip(String id, String username, String arrivalDate, String returnDate, String area, String hotels, String attractions, String travelGuide, String description) {
+        this(id, username, arrivalDate, returnDate, area, hotels, attractions, travelGuide);
+        this.description = description;
+    }
 
     public String getId() {
         return id;
@@ -47,14 +83,6 @@ public class Trip {
         this.returnDate = returnDate;
     }
 
-    public int getDays() {
-        return days;
-    }
-
-    public void setDays(int days) {
-        this.days = days;
-    }
-
     public String getArea() {
         return area;
     }
@@ -63,19 +91,19 @@ public class Trip {
         this.area = area;
     }
 
-    public String getHotels() {
+    public String[] getHotels() {
         return hotels;
     }
 
-    public void setHotels(String hotels) {
+    public void setHotels(String[] hotels) {
         this.hotels = hotels;
     }
 
-    public String getAttractions() {
+    public String[] getAttractions() {
         return attractions;
     }
 
-    public void setAttractions(String attractions) {
+    public void setAttractions(String[] attractions) {
         this.attractions = attractions;
     }
 
@@ -96,10 +124,10 @@ public class Trip {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 }
