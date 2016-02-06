@@ -48,8 +48,8 @@ public class trips extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String name = String.valueOf(parent.getItemAtPosition(position));
-                        Toast.makeText(trips.this, name, Toast.LENGTH_LONG).show();
                         Intent i = new Intent(getApplicationContext(), tripDetails.class);
+                        i.putExtra("input",name);
                         startActivity(i);
                     }
                 }
