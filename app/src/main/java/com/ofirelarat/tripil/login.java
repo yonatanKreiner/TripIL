@@ -28,7 +28,7 @@ public class login extends AppCompatActivity {
         db = new DBHelper(this);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
+        editor.remove(Name);
         editor.commit();
     }
 

@@ -186,7 +186,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText5"
+        android:id="@+id/travelG"
         android:singleLine="true" />
 
     <TextView
@@ -199,7 +199,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText6"
+        android:id="@+id/description"
         android:scrollIndicators="right"
         android:maxLines="3" />
 
@@ -234,6 +234,7 @@
         android:id="@+id/button"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="2dp"
-        android:background="#1abc9c" />
+        android:background="#1abc9c"
+        android:onClick="onClickSubmit" />
 </LinearLayout>
 </ScrollView>

@@ -1,6 +1,7 @@
 package com.ofirelarat.tripil;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,8 +51,6 @@ public class tripDetails extends AppCompatActivity {
         ImageView img = (ImageView) findViewById(R.id.img_id);
         Resources res = context.getResources();
 
-        name.setText(input);
-
     }
 
     public void onClickHotels(View view) {
@@ -58,15 +58,16 @@ public class tripDetails extends AppCompatActivity {
         final int[] i = {0};
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(hotelStr[i[0]]);
-        builder.setCancelable(true)
+        builder.setCancelable(false)
                 .setMessage("blablabla")
-                .setPositiveButton("next", new DialogInterface.OnClickListener() {
+                .setNeutralButton("next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (i[0] < hotelStr.length-1)
-                            i[0]++;
+                       if (i[0] < hotelStr.length-1)
+                           i[0]++;
                         else i[0] = 0;
                         builder.setTitle(hotelStr[i[0]]);
+
                     }
                 })
                 .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
@@ -75,6 +76,7 @@ public class tripDetails extends AppCompatActivity {
                     }
                 }).create().show();
     }
+
 
     public String[] getS(String buf) {
         int count = 1;

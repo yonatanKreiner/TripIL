@@ -19,13 +19,15 @@ import android.widget.TextView;
 public class CostumAdapter  extends BaseAdapter {
 
     Context context;
+    int[] trip_id;
     String[] names;
     String[] stars;
     String[] images;
     private static LayoutInflater inflater = null;
 
-    public CostumAdapter(Context context, String[] names,String[] stars,String[] images) {
+    public CostumAdapter(Context context,int[] trip_id ,String[] names,String[] stars,String[] images) {
     this.context = context;
+    this.trip_id=trip_id;
     this.names = names;
     this.stars=stars;
     this.images=images;
@@ -41,7 +43,7 @@ public class CostumAdapter  extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return names[position];
+        return trip_id[position];
     }
 
     @Override

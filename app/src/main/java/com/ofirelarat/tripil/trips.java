@@ -1,6 +1,8 @@
 package com.ofirelarat.tripil;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,6 +19,9 @@ import android.widget.Toast;
 public class trips extends AppCompatActivity {
 
     ListView listview;
+    SharedPreferences sharedPreferences;
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static final String Name = "NameKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,21 +30,28 @@ public class trips extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        int[] id={1,2};
         String[] names = {"yonatan","ofir elarat"};
         String[] stars ={"tel aviv,stars:4.5","eilat,stars:4"};
         String[] imgs = {"home","home"};
 
         listview = (ListView) findViewById(R.id.listView);
-        listview.setAdapter(new CostumAdapter(this, names, stars, imgs));
+        listview.setAdapter(new CostumAdapter(this, id, names, stars, imgs));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(52, 152, 219)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AddTrip.class);
-                startActivity(i);
+                sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                if (sharedPreferences.getString("NameKey", null) != null) {
+                    Intent i = new Intent(getApplicationContext(), AddTrip.class);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(getApplicationContext(), login.class);
+                    startActivity(i);
+                }
             }
         });
 
@@ -47,9 +59,9 @@ public class trips extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String name = String.valueOf(parent.getItemAtPosition(position));
+                        int tripId = (Integer)parent.getItemAtPosition(position);
                         Intent i = new Intent(getApplicationContext(), tripDetails.class);
-                        i.putExtra("input",name);
+                        i.putExtra("input", tripId);
                         startActivity(i);
                     }
                 }

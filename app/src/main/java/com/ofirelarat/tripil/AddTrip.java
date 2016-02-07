@@ -1,6 +1,8 @@
 package com.ofirelarat.tripil;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Vector;
 
@@ -29,10 +32,30 @@ public class AddTrip extends AppCompatActivity {
     private Spinner spinnerDayR;
     private Spinner spinnerMonthR;
     private Spinner spinnerYearR;
+
+    SharedPreferences sharedPreferences;
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static final String Name = "NameKey";
+    public static final String picName="picName";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
+
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        if(sharedPreferences.getString("NameKey",null)==null) {
+            Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(getApplicationContext(), login.class);
+            startActivity(i);
+        }
+
+        int iPic=sharedPreferences.getInt(picName, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(picName);
+        editor.commit();
+        editor.putInt(picName, iPic);
+        editor.commit();
 
         img=(ImageView)findViewById(R.id.imageID);
         attraction=(EditText)findViewById(R.id.attraction_id);
@@ -40,7 +63,7 @@ public class AddTrip extends AppCompatActivity {
 
         dropdown = (Spinner)findViewById(R.id.spinner);
         String[] items = new String[]{"choose","Jerusalem","Tel Aviv","Eilat","Haifa", "Central", "Northern","Southern"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
         spinnerDay = (Spinner)findViewById(R.id.spinnerDay);
@@ -48,7 +71,7 @@ public class AddTrip extends AppCompatActivity {
         for(int i=0;i<31;i++){
             itemsDays[i]=String.valueOf(i+1);
         }
-        ArrayAdapter<String> adapterDays = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, itemsDays);
+        ArrayAdapter<String> adapterDays = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemsDays);
         spinnerDay.setAdapter(adapterDays);
 
         spinnerMonth = (Spinner)findViewById(R.id.spinnerMonth);
@@ -56,7 +79,7 @@ public class AddTrip extends AppCompatActivity {
         for(int i=0;i<12;i++){
             itemsMonth[i]=String.valueOf(i+1);
         }
-        ArrayAdapter<String> adapterMonth = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, itemsMonth);
+        ArrayAdapter<String> adapterMonth = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemsMonth);
         spinnerMonth.setAdapter(adapterMonth);
 
         spinnerYear = (Spinner)findViewById(R.id.spinnerYear);
@@ -64,7 +87,7 @@ public class AddTrip extends AppCompatActivity {
         for(int i=15;i>=0;i--){
             itemsYear[15-i]=String.valueOf(i+2001);
         }
-        ArrayAdapter<String> adapterYear= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, itemsYear);
+        ArrayAdapter<String> adapterYear= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemsYear);
         spinnerYear.setAdapter(adapterYear);
 
         spinnerDayR = (Spinner)findViewById(R.id.spinnerDayR);
@@ -101,6 +124,29 @@ public class AddTrip extends AppCompatActivity {
             Uri selectedImage=data.getData();
             img.setImageURI(selectedImage);
         }
+    }
+
+
+    public void onClickSubmit(View view){
+        String userName=sharedPreferences.getString("NameKey", null);
+        String arrivalDate=spinnerDay.getSelectedItem().toString()+"/"+spinnerMonth.getSelectedItem().toString()+"/"+spinnerYear.getSelectedItem().toString();
+        String returnDate=spinnerDayR.getSelectedItem().toString()+"/"+spinnerMonthR.getSelectedItem().toString()+"/"+spinnerYearR.getSelectedItem().toString();
+        String area=dropdown.getSelectedItem().toString();
+        String hotel=hotels.getText().toString();
+        String attractions=attraction.getText().toString();
+        EditText travelG=(EditText)findViewById(R.id.travelG);
+        String travelGuide=travelG.getText().toString();
+        EditText descriptionE=(EditText)findViewById(R.id.description);
+        String description=descriptionE.getText().toString();
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        int iPic=sharedPreferences.getInt(picName, 0);
+        img.setImageResource(getResources().getIdentifier(String.valueOf(iPic), "drawable", getApplication().getPackageName()));
+        iPic++;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(picName);
+        editor.commit();
+        editor.putInt(picName, iPic);
+        editor.commit();
     }
 
     @Override
