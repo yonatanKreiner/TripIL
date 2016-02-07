@@ -58,23 +58,32 @@ public class tripDetails extends AppCompatActivity {
         final int[] i = {0};
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(hotelStr[i[0]]);
-        builder.setCancelable(false)
+        builder.setCancelable(true)
                 .setMessage("blablabla")
-                .setNeutralButton("next", new DialogInterface.OnClickListener() {
+                .setPositiveButton("next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       if (i[0] < hotelStr.length-1)
-                           i[0]++;
-                        else i[0] = 0;
-                        builder.setTitle(hotelStr[i[0]]);
-
                     }
                 })
                 .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                }).create().show();
+                });
+        final AlertDialog dialog=builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // dialog.dismiss();
+                if (i[0] < hotelStr.length - 1)
+                    i[0]++;
+                else i[0] = 0;
+                dialog.setTitle(hotelStr[i[0]]);
+                dialog.setMessage("nanana");
+            }
+        });
+
     }
 
 
