@@ -33,26 +33,25 @@ public class login extends AppCompatActivity {
     }
 
     public void onClickLogin(View view){
-        EditText userName = (EditText)findViewById(R.id.userName);
-        EditText pass = (EditText)findViewById(R.id.pass);
+        String userName = ((EditText)findViewById(R.id.userName)).getText().toString();
+        String pass = ((EditText)findViewById(R.id.pass)).getText().toString();
 
+        User user = db.FindUser(userName, pass);
+
+        if(user == null){
+            Toast.makeText(this, "user or password is incorrect", Toast.LENGTH_LONG).show();
+        } else{
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Name, user.getUsername());
+            editor.commit();
+            Intent i = new Intent(this, trips.class);
+            startActivity(i);
+        }
    //     Bundle extras=getIntent().getExtras();
      //   if(extras!=null) {
        //     int Value = extras.getInt("id");
          //   if (Value > 0) {
-                String Upass = db.getPassUser(userName.getText().toString());
 
-                if (Upass.equals("not exist"))
-                    Toast.makeText(this, "user not exist", Toast.LENGTH_LONG).show();
-                else if (Upass.equals(pass.getText().toString())) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(Name, userName.getText().toString());
-                    editor.commit();
-                    Intent i = new Intent(this, trips.class);
-                    startActivity(i);
-                } else {
-                    Toast.makeText(this, "wrong password", Toast.LENGTH_LONG).show();
-                }
            // }
        // }
     }

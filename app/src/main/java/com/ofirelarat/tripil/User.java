@@ -1,8 +1,5 @@
 package com.ofirelarat.tripil;
 
-/**
- * Created by ofir on 02/02/2016.
- */
 public class User {
     String username;
     String firstName;
@@ -11,6 +8,26 @@ public class User {
     String mail;
     String phone;
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String password, String firstName, String lastName) {
+        this(username, password);
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public User(String username, String firstName, String lastName, String password, String mail) {
+        this(username, password, firstName, lastName);
+        this.mail = mail;
+    }
+
+    public User(String username, String firstName, String lastName, String password, String mail, String phone) {
+        this(username, password, firstName, lastName, mail);
+        this.phone = phone;
+    }
 
     public String getUsername() {
         return username;

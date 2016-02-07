@@ -64,7 +64,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public void insertTrip(Trip trip) {
+    public void AddTrip(Trip trip) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
@@ -82,24 +82,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    //delete trip from the database
-    public void DeleteTrip(String trip_id){
-        String selection = DBContract.DBTrip._ID + " LIKE ?";
-        String[] selectionArgs = { String.valueOf(trip_id) };
-        db.delete(DBContract.DBTrip.TABLE_NAME, selection, selectionArgs);
-        db.close();
-    }
-
-    //delete user from database
-    public void DeleteUser(String username){
-        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + " LIKE ?";
-        String[] selectionArgs = { String.valueOf(username) };
-        db.delete(DBContract.DBUser.TABLE_NAME, selection, selectionArgs);
-        db.close();
-    }
-
     //find trip by id
-    public Trip FindTripsByUserId(int id){
+    public Trip FindTripsById(int id){
         db = this.getReadableDatabase();
 
         String[] projection = {
@@ -130,20 +114,25 @@ public class DBHelper extends SQLiteOpenHelper {
         );
 
         db.close();
-        c.moveToFirst();
 
-        return new Trip(
-                Integer.getInteger(String.valueOf(c.getLong(0))),
-                c.getString(1),
-                c.getString(2),
-                c.getString(3),
-                c.getString(4),
-                c.getString(5),
-                c.getString(6),
-                c.getString(7),
-                c.getString(8),
-                c.getString(9)
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+
+            return new Trip(
+                    Integer.getInteger(String.valueOf(c.getLong(0))),
+                    c.getString(1),
+                    c.getString(2),
+                    c.getString(3),
+                    c.getString(4),
+                    c.getString(5),
+                    c.getString(6),
+                    c.getString(7),
+                    c.getString(8),
+                    c.getString(9)
             );
+        }
+
+        return null;
     }
 
     //find trip by user name
@@ -202,67 +191,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return trips;
     }
 
-    //find user
-    public Cursor findUser(String userName,String password){
-        db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + DBContract.DBUser.TABLE_NAME + " WHERE " +
-                DBContract.DBUser.COLUMN_NAME_USERNAME + "=" + userName + "and" + DBContract.DBUser.COLUMN_NAME_PASSWORD + "=" + password + "", null);
-        db.close();
-
-        return res;
-    }
-
-    // check if user is already exist
-    public Cursor isExistUser(String userName){
-        db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + DBContract.DBUser.TABLE_NAME + " WHERE " + DBContract.DBUser.COLUMN_NAME_USERNAME + "=" + userName, null);
-        db.close();
-
-        return res;
-    }
-
-    //get a user pass by  name
-    public String getPassUser(String username){
-        db = getReadableDatabase();
-        String query = "SELECT " + DBContract.DBUser.COLUMN_NAME_USERNAME + "," +
-                DBContract.DBUser.COLUMN_NAME_PASSWORD + " FROM " + DBContract.DBUser.TABLE_NAME;
-        Cursor cursor = db.rawQuery(query,null);
-        String pass = "not exist";
-        String name;
-
-        if(cursor.moveToFirst())
-        {
-            do{
-                name = cursor.getString(0);
-
-                if(name.equals(username)){
-                    pass = cursor.getString(1);
-
-                    break;
-                }
-            }  while(cursor.moveToNext());
-
-        }
-
-        return pass;
-    }
-
-    public void AddUser(User user) {
-        db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
-        values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
-        values.put(DBContract.DBUser.COLUMN_NAME_FIRST_NAME, user.firstName);
-        values.put(DBContract.DBUser.COLUMN_NAME_LAST_NAME, user.lastName);
-        values.put(DBContract.DBUser.COLUMN_NAME_MAIL, user.mail);
-        values.put(DBContract.DBUser.COLUMN_NAME_PHONE, user.phone);
-
-        long newRowId = db.insert(DBContract.DBUser.TABLE_NAME, null, values);
-        db.close();
-    }
-
     //update trip
-    public void updateTrip(Trip trip){
+    public void UpdateTrip(Trip trip){
         ContentValues values = new ContentValues();
         values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
         values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
@@ -277,6 +207,100 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db = getWritableDatabase();
         db.update(DBContract.DBTrip.TABLE_NAME, values, DBContract.DBTrip._ID + "=" + trip.getId(), null);
+        db.close();
+    }
+
+    //delete trip from the database
+    public void DeleteTrip(String trip_id){
+        String selection = DBContract.DBTrip._ID + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(trip_id) };
+        db.delete(DBContract.DBTrip.TABLE_NAME, selection, selectionArgs);
+        db.close();
+    }
+
+    public boolean AddUser(User user) {
+        db = getWritableDatabase();
+
+        if(FindUser(user.username, user.password) != null) {
+            ContentValues values = new ContentValues();
+            values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
+            values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
+            values.put(DBContract.DBUser.COLUMN_NAME_FIRST_NAME, user.firstName);
+            values.put(DBContract.DBUser.COLUMN_NAME_LAST_NAME, user.lastName);
+            values.put(DBContract.DBUser.COLUMN_NAME_MAIL, user.mail);
+            values.put(DBContract.DBUser.COLUMN_NAME_PHONE, user.phone);
+
+            long newRowId = db.insert(DBContract.DBUser.TABLE_NAME, null, values);
+            db.close();
+
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    //find user
+    public User FindUser(String username, String password){
+        db = this.getReadableDatabase();
+
+        String[] projection = {
+                DBContract.DBUser.COLUMN_NAME_USERNAME,
+                DBContract.DBUser.COLUMN_NAME_FIRST_NAME,
+                DBContract.DBUser.COLUMN_NAME_LAST_NAME,
+                DBContract.DBUser.COLUMN_NAME_PASSWORD,
+                DBContract.DBUser.COLUMN_NAME_MAIL,
+                DBContract.DBUser.COLUMN_NAME_PHONE
+        };
+
+        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + " LIKE ? AND " + DBContract.DBUser.COLUMN_NAME_PASSWORD + "LIKE ?";
+        String[] selectionArgs = { username, password };
+
+        Cursor c = db.query(
+                DBContract.DBUser.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        if(c.getCount() > 0) {
+            c.moveToFirst();
+
+            return new User(
+                    c.getString(0),
+                    c.getString(1),
+                    c.getString(2),
+                    c.getString(3),
+                    c.getString(4),
+                    c.getString(5)
+            );
+        }
+
+        return null;
+    }
+
+    //update trip
+    public void UpdateUser(User user){
+        ContentValues values = new ContentValues();
+
+        values.put(DBContract.DBUser.COLUMN_NAME_FIRST_NAME, user.getUsername());
+        values.put(DBContract.DBUser.COLUMN_NAME_LAST_NAME, user.getLastName());
+        values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.getPassword());
+        values.put(DBContract.DBUser.COLUMN_NAME_MAIL, user.getMail());
+        values.put(DBContract.DBUser.COLUMN_NAME_PHONE, user.getPhone());
+
+        db = getWritableDatabase();
+        db.update(DBContract.DBUser.TABLE_NAME, values, DBContract.DBUser.COLUMN_NAME_USERNAME + "=" + user.getUsername(), null);
+        db.close();
+    }
+
+    //delete user from database
+    public void DeleteUser(String username){
+        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(username) };
+        db.delete(DBContract.DBUser.TABLE_NAME, selection, selectionArgs);
         db.close();
     }
 

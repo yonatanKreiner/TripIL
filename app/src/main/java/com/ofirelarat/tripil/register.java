@@ -24,29 +24,21 @@ public class register extends AppCompatActivity {
     }
 
     public void onClickRegister(View view){
-        EditText userName=(EditText)findViewById(R.id.userName);
-        EditText pass=(EditText)findViewById(R.id.pass);
-        EditText firstName=(EditText)findViewById(R.id.firstName);
-        EditText lastName=(EditText)findViewById(R.id.lastName);
-        EditText mail=(EditText)findViewById(R.id.mail);
-        EditText phone=(EditText)findViewById(R.id.phone);
+        String userName = ((EditText)findViewById(R.id.userName)).getText().toString();
+        String pass = ((EditText)findViewById(R.id.pass)).getText().toString();
+        String firstName = ((EditText)findViewById(R.id.firstName)).getText().toString();
+        String lastName = ((EditText)findViewById(R.id.lastName)).getText().toString();
+        String mail = ((EditText)findViewById(R.id.mail)).getText().toString();
+        String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
 
-        User user = new User();
-        user.setUsername(userName.getText().toString());
-        user.setPassword(pass.getText().toString());
-        user.setFirstName(firstName.getText().toString());
-        user.setLastName(lastName.getText().toString());
-        user.setMail(mail.getText().toString());
-        user.setPhone(phone.getText().toString());
+        User user = new User(userName, pass, firstName, lastName, mail, phone);
 
-     //  String p= dbHandler.getPassUser(userName.getText().toString());
-     // if(p.equals("not exist")) {
-            db.AddUser(user);
+        if(db.AddUser(user)){
             Intent i = new Intent(this, trips.class);
             startActivity(i);
-      //  }
-       // else
-        //    Toast.makeText(this,"user name already exist",Toast.LENGTH_LONG).show();
+        } else{
+            Toast.makeText(this, "user name already exist", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
