@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.w3c.dom.Text;
 
 public class tripDetails extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class tripDetails extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,8 @@ public class tripDetails extends AppCompatActivity {
                 }
             }
         });
+
+        JSONArray a = DAL.Request("Hotels", "Dan Tel Aviv");
     }
 
     public void onClickHotels(View view) {

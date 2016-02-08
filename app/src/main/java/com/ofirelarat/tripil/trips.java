@@ -32,7 +32,6 @@ public class trips extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        JSONArray a = DAL.Request("Hotels", "Dan Tel Aviv");
         int[] id={1,2};
         String[] names = {"yonatan","ofir elarat"};
         String[] date ={"tel aviv","eilat"};
