@@ -59,7 +59,9 @@ public class tripDetails extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                 trip.onRate(ratingBar.getRating());
+                if (sharedPreferences.getString("NameKey", null) != null) {
+                    trip.onRate(ratingBar.getRating());
+                }
             }
         });
     }

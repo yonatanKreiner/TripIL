@@ -217,7 +217,7 @@
             android:layout_weight="0.5"
             android:onClick="onClickUploadIMG"
             android:layout_gravity="center_vertical"
-            android:background="#1abc9c" />
+            android:background="#3498db" />
 
         <ImageView
             android:layout_width="150dp"
@@ -234,7 +234,7 @@
         android:id="@+id/button"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="2dp"
-        android:background="#1abc9c"
+        android:background="#3498db"
         android:onClick="onClickSubmit" />
 </LinearLayout>
 </ScrollView>
