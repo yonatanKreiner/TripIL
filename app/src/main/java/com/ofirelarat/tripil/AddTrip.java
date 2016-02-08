@@ -3,6 +3,7 @@ package com.ofirelarat.tripil;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class AddTrip extends AppCompatActivity {
     public static final String Name = "NameKey";
     public static final String picName="picName";
 
+    boolean flag=false;
     DBHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +101,16 @@ public class AddTrip extends AppCompatActivity {
         spinnerYearR.setAdapter(adapterYear);
     }
 
-    public void onClickUploadIMG(View view){
+    public void onClickUpload(View view){
+        flag=false;
         Intent galleryIntent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-        /*Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);*/
+    }
+
+    public void onClickCamera(View view){
+        flag=true;
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
     }
 
     public void onClickAddAttraction(View view){
@@ -126,9 +130,15 @@ public class AddTrip extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==RESULT_LOAD_IMAGE && resultCode==RESULT_OK && data!=null){
-            Uri selectedImage=data.getData();
-            img.setImageURI(selectedImage);
+        if(flag==false) {
+            if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+                Uri selectedImage = data.getData();
+                img.setImageURI(selectedImage);
+            }
+        }
+        else{
+            Bitmap bp = (Bitmap) data.getExtras().get("data");
+            img.setImageBitmap(bp);
         }
     }
 

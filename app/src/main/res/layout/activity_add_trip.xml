@@ -106,7 +106,7 @@
 
 
         <Spinner
-            android:layout_width="wrap_content"
+            android:layout_width="167dp"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
             android:background="#bdc3c7"
@@ -209,15 +209,33 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
 
-        <Button
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upload Image"
-            android:id="@+id/button2"
-            android:layout_weight="0.5"
-            android:onClick="onClickUploadIMG"
-            android:layout_gravity="center_vertical"
-            android:background="#3498db" />
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton3"
+                android:layout_weight="0.5"
+                android:src="@android:drawable/ic_menu_camera"
+                android:onClick="onClickCamera" />
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton2"
+                android:layout_weight="0.5"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:onClick="onClickUpload" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="150dp"

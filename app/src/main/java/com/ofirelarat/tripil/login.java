@@ -63,7 +63,7 @@ public class login extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_details, menu);
-        MenuItem menuI = menu.findItem(R.id.back);
+        MenuItem menuI = menu.findItem(R.id.logIn);
         menuI.setVisible(false);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         if (sharedPreferences.getString("NameKey", null) != null) {
