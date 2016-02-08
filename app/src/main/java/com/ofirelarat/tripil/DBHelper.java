@@ -77,13 +77,13 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
             values.put(DBContract.DBTrip.COLUMN_NAME_RETURN, trip.getReturnDate());
             values.put(DBContract.DBTrip.COLUMN_NAME_AREA, trip.getArea());
-            values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, ArrayToString(trip.getHotels()));
-            values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, ArrayToString(trip.getAttractions()));
+            values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, Common.ArrayToString(trip.getHotels()));
+            values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, Common.ArrayToString(trip.getAttractions()));
             values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
             values.put(DBContract.DBTrip.COLUMN_NAME_RATES_COUNT, trip.getNumOfRates());
             values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
             values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
-            values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, ArrayToString(trip.getPictures()));
+            values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, Common.ArrayToString(trip.getPictures()));
 
             db.insert(DBContract.DBTrip.TABLE_NAME, null, values);
             db.close();
@@ -223,13 +223,13 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
         values.put(DBContract.DBTrip.COLUMN_NAME_RETURN, trip.getReturnDate());
         values.put(DBContract.DBTrip.COLUMN_NAME_AREA, trip.getArea());
-        values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, ArrayToString(trip.getHotels()));
-        values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, ArrayToString(trip.getAttractions()));
+        values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, Common.ArrayToString(trip.getHotels()));
+        values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, Common.ArrayToString(trip.getAttractions()));
         values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
         values.put(DBContract.DBTrip.COLUMN_NAME_RATES_COUNT, trip.getNumOfRates());
         values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
         values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
-        values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, ArrayToString(trip.getPictures()));
+        values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, Common.ArrayToString(trip.getPictures()));
 
         db = getWritableDatabase();
         db.update(DBContract.DBTrip.TABLE_NAME, values, DBContract.DBTrip._ID + "=" + trip.getId(), null);
@@ -330,11 +330,6 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { String.valueOf(username) };
         db.delete(DBContract.DBUser.TABLE_NAME, selection, selectionArgs);
         db.close();
-    }
-
-    private String ArrayToString(String[] arr){
-        String temp = Arrays.toString(arr);
-        return temp.substring(1, temp.length()-1);
     }
 
     private boolean CheckDB(){
