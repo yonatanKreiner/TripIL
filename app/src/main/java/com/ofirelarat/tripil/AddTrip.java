@@ -44,11 +44,11 @@ public class AddTrip extends AppCompatActivity {
         setContentView(R.layout.activity_add_trip);
 
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        if(sharedPreferences.getString("NameKey",null)==null) {
-            Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
-            Intent i = new Intent(getApplicationContext(), login.class);
-            startActivity(i);
-        }
+    //    if(sharedPreferences.getString("NameKey",null)==null) {
+      //      Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+        //    Intent i = new Intent(getApplicationContext(), login.class);
+          //  startActivity(i);
+        //}
 
         int iPic=sharedPreferences.getInt(picName, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -101,6 +101,11 @@ public class AddTrip extends AppCompatActivity {
     public void onClickUploadIMG(View view){
         Intent galleryIntent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+        /*Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);*/
     }
 
     public void onClickAddAttraction(View view){

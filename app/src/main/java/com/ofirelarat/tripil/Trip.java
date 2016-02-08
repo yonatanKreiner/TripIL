@@ -155,7 +155,9 @@ public class Trip {
         this.pictures = pictures;
     }
 
-    public void Rate(float rating){
-
+    public void onRate(float rating){
+        float M=this.stars*this.numOfRates+rating;
+        this.numOfRates++;
+        this.stars=M/this.numOfRates;
     }
 }

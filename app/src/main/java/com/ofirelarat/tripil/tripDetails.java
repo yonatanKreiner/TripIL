@@ -30,7 +30,7 @@ public class tripDetails extends AppCompatActivity {
     TextView travelGuide;
     EditText description;
     RatingBar ratingBar;
-
+    Trip trip;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +51,11 @@ public class tripDetails extends AppCompatActivity {
         ImageView img = (ImageView) findViewById(R.id.img_id);
         Resources res = context.getResources();
         ratingBar=(RatingBar)findViewById(R.id.ratingBar);
-       // final float[] star = {0};
+
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-            //    star[0] =ratingBar.getRating();
+                 trip.onRate(ratingBar.getRating());
             }
         });
     }

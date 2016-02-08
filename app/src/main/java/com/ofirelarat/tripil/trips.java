@@ -43,15 +43,15 @@ public class trips extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-                if (sharedPreferences.getString("NameKey", null) != null) {
+               // sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+             //   if (sharedPreferences.getString("NameKey", null) != null) {
                     Intent i = new Intent(getApplicationContext(), AddTrip.class);
                     startActivity(i);
-                } else {
-                    Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(getApplicationContext(), login.class);
-                    startActivity(i);
-                }
+            //    } else {
+              //      Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+            //        Intent i = new Intent(getApplicationContext(), login.class);
+            //        startActivity(i);
+              //  }
             }
         });
 

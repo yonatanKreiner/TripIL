@@ -35,7 +35,7 @@ public class Home extends AppCompatActivity {
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final int AUTO_HIDE_DELAY_MILLIS = 0000;
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -117,7 +117,7 @@ public class Home extends AppCompatActivity {
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),trips.class);
+                Intent i = new Intent(getApplicationContext(),login.class);
                 startActivity(i);
             }
         });
