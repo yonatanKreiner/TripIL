@@ -38,7 +38,7 @@ public class register extends AppCompatActivity {
         User user = new User(username, pass, firstName, lastName, mail, phone);
 
         if(db.AddUser(user)){
-            Intent i = new Intent(this, trips.class);
+            Intent i = new Intent(this, login.class);
             startActivity(i);
         } else{
             Toast.makeText(this, "user name already exist", Toast.LENGTH_LONG).show();

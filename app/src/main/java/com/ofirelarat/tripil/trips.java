@@ -24,6 +24,7 @@ public class trips extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
+    DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

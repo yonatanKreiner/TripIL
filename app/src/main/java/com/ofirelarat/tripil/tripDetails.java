@@ -20,11 +20,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.w3c.dom.Text;
 
 public class tripDetails extends AppCompatActivity {
-
     TextView name;
     TextView date;
     TextView hotels;
@@ -36,7 +34,7 @@ public class tripDetails extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
-
+    DBHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +56,23 @@ public class tripDetails extends AppCompatActivity {
         Resources res = context.getResources();
         ratingBar=(RatingBar)findViewById(R.id.ratingBar);
 
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        trip=db.FindTripsById(Integer.valueOf(input));
+        if(trip==null){
+            Intent intent = new Intent(getApplicationContext(), trips.class);
+            startActivity(intent);
+        }
+        name.setText(trip.getUsername());
+        date.setText(trip.getArrivalDate()+"-"+trip.getReturnDate());
+        hotels.setText(Common.ArrayToString(trip.getHotels()));
+        attraction.setText(Common.ArrayToString(trip.getAttractions()));
+        travelGuide.setText(trip.getTravelGuide());
+        description.setText(trip.getDescription());
+
+        ratingBar.setRating(trip.getStars());
+        if (sharedPreferences.getString("NameKey", null) == null) {
+            ratingBar.setIsIndicator(true);
+        }
+            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (sharedPreferences.getString("NameKey", null) != null) {
@@ -66,15 +80,12 @@ public class tripDetails extends AppCompatActivity {
                 }
             }
         });
-
-        JSONArray a = DAL.Request("Hotels", "Dan Tel Aviv");
     }
 
     public void onClickHotels(View view) {
-        final String[] hotelStr = hotels.getText().toString().split(",");
         final int[] i = {0};
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(hotelStr[i[0]]);
+        builder.setTitle(trip.getHotels()[i[0]]);
         builder.setCancelable(true)
                 .setMessage("blablabla")
                 .setPositiveButton("next", new DialogInterface.OnClickListener() {
@@ -95,10 +106,10 @@ public class tripDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                // dialog.dismiss();
-                if (i[0] < hotelStr.length - 1)
+                if (i[0] < trip.getHotels().length - 1)
                     i[0]++;
                 else i[0] = 0;
-                dialog.setTitle(hotelStr[i[0]]);
+                dialog.setTitle(trip.getHotels()[i[0]]);
                 dialog.setMessage("nanana");
             }
         });

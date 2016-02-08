@@ -59,6 +59,18 @@ public class Trip {
         this.pictures = pictures.split(",");
     }
 
+    public Trip(String username, String arrivalDate, String returnDate, String area, String hotels, String attractions, String travelGuide, String description, String pictures) {
+        this.username=username;
+        this.arrivalDate=arrivalDate;
+        this.returnDate=returnDate;
+        this.area=area;
+        this.hotels=hotels.split(",");
+        this.attractions=attractions.split(",");
+        this.travelGuide=travelGuide;
+        this.description=description;
+        this.pictures = pictures.split(",");
+    }
+
     public int getId() {
         return id;
     }

@@ -38,6 +38,7 @@ public class AddTrip extends AppCompatActivity {
     public static final String Name = "NameKey";
     public static final String picName="picName";
 
+    DBHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +153,14 @@ public class AddTrip extends AppCompatActivity {
         editor.commit();
         editor.putInt(picName, iPic);
         editor.commit();
+
+        Trip trip=new Trip(userName,arrivalDate,returnDate,area,hotel,attractions,travelGuide,description,String.valueOf(iPic));
+        if(db.AddTrip(trip)){
+            Intent i = new Intent(this, trips.class);
+            startActivity(i);
+        } else{
+            Toast.makeText(this, "user name already exist", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
