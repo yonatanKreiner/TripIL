@@ -55,7 +55,7 @@ public class login extends AppCompatActivity {
     }
 
     public void onClickGuest(View view){
-        Intent i=new Intent(this,register.class);
+        Intent i=new Intent(this,trips.class);
         startActivity(i);
     }
 

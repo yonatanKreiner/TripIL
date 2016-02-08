@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 public class trips extends AppCompatActivity {
 
     ListView listview;
@@ -30,6 +32,7 @@ public class trips extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        JSONArray a = DAL.Request("Hotels", "Dan Tel Aviv");
         int[] id={1,2};
         String[] names = {"yonatan","ofir elarat"};
         String[] date ={"tel aviv","eilat"};

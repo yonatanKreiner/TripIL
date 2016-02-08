@@ -44,10 +44,19 @@ public class DAL extends AsyncTask<String, Void, String>{
         return instance;
     }
 
+    public static JSONArray Request(String repository) {
+        return Request(repository, "");
+    }
+
     public static JSONArray Request(String repository, String data) {
         try {
             String temp = "";
-            String response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(repository) + "&q=" + data));
+
+            if (data != ""){
+                data = "&q=" + data;
+            }
+
+            String response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(repository) + data));
             JSONArray arr = ((new JSONObject(response)).getJSONObject("result")).getJSONArray("products");
 
             switch (repository){
@@ -61,7 +70,7 @@ public class DAL extends AsyncTask<String, Void, String>{
                     return arr;
             }
 
-            response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(temp) + "&q=" + data));
+            response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(temp) + data));
 
             return concatArray(arr, ((new JSONObject(response)).getJSONObject("result")).getJSONArray("products"));
         } catch (JSONException e) {
