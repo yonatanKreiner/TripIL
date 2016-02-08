@@ -19,7 +19,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 
 public class trips extends AppCompatActivity {
-
     ListView listview;
     SharedPreferences sharedPreferences;
     public static final String MyPREFERENCES = "MyPrefs";
@@ -29,17 +28,12 @@ public class trips extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = new DBHelper(this);
         setContentView(R.layout.activity_trips);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        int[] id={1,2};
-        String[] names = {"yonatan","ofir elarat"};
-        String[] date ={"tel aviv","eilat"};
-        String[] imgs = {"home","home"};
-        float[] stars={4,2};
         listview = (ListView) findViewById(R.id.listView);
-        listview.setAdapter(new CostumAdapter(this, id, names, date, imgs, stars));
+        listview.setAdapter(new CostumAdapter(this, db.GetAll()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(52, 152, 219)));

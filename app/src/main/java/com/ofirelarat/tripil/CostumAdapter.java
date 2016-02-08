@@ -20,33 +20,25 @@ import android.widget.TextView;
 public class CostumAdapter  extends BaseAdapter {
 
     Context context;
-    int[] trip_id;
-    String[] names;
-    String[] stars;
-    String[] images;
-    float[] ratingBars;
+    Trip[] trips;
     private static LayoutInflater inflater = null;
 
-    public CostumAdapter(Context context,int[] trip_id ,String[] names,String[] stars,String[] images,float[] ratingBars) {
+    public CostumAdapter(Context context, Trip[] trips) {
     this.context = context;
-    this.trip_id=trip_id;
-    this.names = names;
-    this.stars=stars;
-    this.images=images;
-    this.ratingBars=ratingBars;
+    this.trips=trips;
     inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 }
 
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return names.length;
+        return trips.length;
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return trip_id[position];
+        return trips[position].getId();
     }
 
     @Override
@@ -62,15 +54,15 @@ public class CostumAdapter  extends BaseAdapter {
         if (vi == null)
             vi = inflater.inflate(R.layout.custom_row, null);
         TextView name = (TextView) vi.findViewById(R.id.user_id);
-        name.setText(names[position]);
-        TextView star = (TextView) vi.findViewById(R.id.date_id);
-        star.setText(stars[position]);
+        name.setText(trips[position].getUsername());
+        TextView date = (TextView) vi.findViewById(R.id.date_id);
+        date.setText(trips[position].getArrivalDate() + " - " + trips[position].getReturnDate());
         ImageView img=(ImageView)vi.findViewById(R.id.img_id);
         Resources res =context.getResources();
-        int id = res.getIdentifier(images[position],"drawable",context.getPackageName());
+        int id = res.getIdentifier(trips[position].getPictures()[0],"drawable",context.getPackageName());
         img.setImageResource(id);
         RatingBar ratingBar=(RatingBar)vi.findViewById(R.id.ratingBar);
-        ratingBar.setRating(ratingBars[position]);
+        ratingBar.setRating(trips[position].getStars());
         return vi;
     }
 }

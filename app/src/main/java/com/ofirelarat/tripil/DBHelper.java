@@ -96,6 +96,67 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public Trip[] GetAll(){
+        db = getReadableDatabase();
+
+        String[] projection = {
+                DBContract.DBTrip._ID,
+                DBContract.DBTrip.COLUMN_NAME_USERNAME,
+                DBContract.DBTrip.COLUMN_NAME_ARRAIVAL,
+                DBContract.DBTrip.COLUMN_NAME_RETURN,
+                DBContract.DBTrip.COLUMN_NAME_AREA,
+                DBContract.DBTrip.COLUMN_NAME_HOTEL,
+                DBContract.DBTrip.COLUMN_NAME_ATTRACTION,
+                DBContract.DBTrip.COLUMN_NAME_STARS,
+                DBContract.DBTrip.COLUMN_NAME_RATES_COUNT,
+                DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE,
+                DBContract.DBTrip.COLUMN_NAME_DESCRIPTION,
+                DBContract.DBTrip.COLUMN_NAME_PICTURES
+        };
+
+        Cursor c = db.query(
+                DBContract.DBTrip.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        db.close();
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            List<Trip> trips = new ArrayList<>();
+
+            do {
+                Trip t = new Trip(
+                        c.getInt(0),
+                        c.getString(1),
+                        c.getString(2),
+                        c.getString(3),
+                        c.getString(4),
+                        c.getString(5),
+                        c.getString(6),
+                        c.getString(9),
+                        c.getString(10),
+                        c.getString(11)
+                );
+
+                t.setStars(Integer.getInteger(c.getString(7)));
+                t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                trips.add(t);
+            } while(c.moveToNext());
+
+            c.close();
+
+            return (Trip[])trips.toArray();
+        }
+
+        return null;
+    }
+
     //find trip by id
     public Trip FindTripsById(int id){
         db = getReadableDatabase();
