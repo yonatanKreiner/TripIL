@@ -28,14 +28,14 @@ public class register extends AppCompatActivity {
     }
 
     public void onClickRegister(View view){
-        String userName = ((EditText)findViewById(R.id.userName)).getText().toString();
+        String username = ((EditText)findViewById(R.id.userName)).getText().toString();
         String pass = ((EditText)findViewById(R.id.pass)).getText().toString();
         String firstName = ((EditText)findViewById(R.id.firstName)).getText().toString();
         String lastName = ((EditText)findViewById(R.id.lastName)).getText().toString();
         String mail = ((EditText)findViewById(R.id.mail)).getText().toString();
         String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
 
-        User user = new User(userName, pass, firstName, lastName, mail, phone);
+        User user = new User(username, pass, firstName, lastName, mail, phone);
 
         if(db.AddUser(user)){
             Intent i = new Intent(this, trips.class);

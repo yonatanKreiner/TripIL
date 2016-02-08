@@ -2,9 +2,9 @@ package com.ofirelarat.tripil;
 
 public class User {
     String username;
+    String password;
     String firstName;
     String lastName;
-    String password;
     String mail;
     String phone;
 
@@ -19,12 +19,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public User(String username, String firstName, String lastName, String password, String mail) {
+    public User(String username, String password, String firstName, String lastName, String mail) {
         this(username, password, firstName, lastName);
         this.mail = mail;
     }
 
-    public User(String username, String firstName, String lastName, String password, String mail, String phone) {
+    public User(String username, String password, String firstName, String lastName, String mail, String phone) {
         this(username, password, firstName, lastName, mail);
         this.phone = phone;
     }

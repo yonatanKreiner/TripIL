@@ -24,6 +24,7 @@ public final class DBContract {
         public static final String COLUMN_NAME_HOTEL = "hotels";
         public static final String COLUMN_NAME_ATTRACTION = "attraction";
         public static final String COLUMN_NAME_STARS = "stars";
+        public static final String COLUMN_NAME_RATES_COUNT = "rates_count";
         public static final String COLUMN_NAME_TRAVEL_GUIDE = "travel_guide";
         public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_PICTURES = "pictures";

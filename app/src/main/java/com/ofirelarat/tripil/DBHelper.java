@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_USERS =
             "CREATE TABLE " + DBContract.DBUser.TABLE_NAME + "(" +
-                    DBContract.DBUser.COLUMN_NAME_USERNAME + "TEXT PRIMARY KEY," +
+                    DBContract.DBUser.COLUMN_NAME_USERNAME + " TEXT PRIMARY KEY," +
                     DBContract.DBUser.COLUMN_NAME_FIRST_NAME + " TEXT," +
                     DBContract.DBUser.COLUMN_NAME_LAST_NAME + " TEXT," +
                     DBContract.DBUser.COLUMN_NAME_PASSWORD + " TEXT NOT NULL," +
@@ -29,21 +29,24 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TRIPS =
             "CREATE TABLE " + DBContract.DBTrip.TABLE_NAME + "(" +
                     DBContract.DBTrip._ID + " INTEGER PRIMARY KEY," +
-                    DBContract.DBTrip.COLUMN_NAME_USERNAME + "TEXT NOT NULL," +
+                    DBContract.DBTrip.COLUMN_NAME_USERNAME + " TEXT NOT NULL," +
                     DBContract.DBTrip.COLUMN_NAME_ARRAIVAL + " TEXT NOT NULL," +
                     DBContract.DBTrip.COLUMN_NAME_RETURN + " TEXT NOT NULL, " +
                     DBContract.DBTrip.COLUMN_NAME_AREA + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_HOTEL + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_ATTRACTION + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_STARS + " TEXT," +
+                    DBContract.DBTrip.COLUMN_NAME_RATES_COUNT + " INTEGER," +
                     DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE + " TEXT," +
                     DBContract.DBTrip.COLUMN_NAME_DESCRIPTION + " TEXT," +
-                    DBContract.DBTrip.COLUMN_NAME_PICTURES + " TEXT)";
+                    DBContract.DBTrip.COLUMN_NAME_PICTURES + " TEXT, FOREIGN KEY(" +
+                    DBContract.DBTrip.COLUMN_NAME_USERNAME + ") REFERENCES " +
+                    DBContract.DBUser.TABLE_NAME + "(" + DBContract.DBUser.COLUMN_NAME_USERNAME + "))";
 
     private static final String SQL_DELETE_TRIPS =
             "DROP TABLE IF EXISTS " + DBContract.DBTrip.TABLE_NAME;
 
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 20;
     public static final String DATABASE_NAME = "TripIL.db";
 
     public DBHelper(Context context) {
@@ -67,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean AddTrip(Trip trip) {
         db = getWritableDatabase();
+
         if((CheckDB() && FindTripsById(trip.id) != null) || (!CheckDB())) {
             ContentValues values = new ContentValues();
             values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
@@ -76,6 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, ArrayToString(trip.getHotels()));
             values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, ArrayToString(trip.getAttractions()));
             values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
+            values.put(DBContract.DBTrip.COLUMN_NAME_RATES_COUNT, trip.getNumOfRates());
             values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
             values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
             values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, ArrayToString(trip.getPictures()));
@@ -104,6 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBContract.DBTrip.COLUMN_NAME_HOTEL,
                 DBContract.DBTrip.COLUMN_NAME_ATTRACTION,
                 DBContract.DBTrip.COLUMN_NAME_STARS,
+                DBContract.DBTrip.COLUMN_NAME_RATES_COUNT,
                 DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE,
                 DBContract.DBTrip.COLUMN_NAME_DESCRIPTION,
                 DBContract.DBTrip.COLUMN_NAME_PICTURES
@@ -127,18 +133,23 @@ public class DBHelper extends SQLiteOpenHelper {
         if (c.getCount() > 0) {
             c.moveToFirst();
 
-            return new Trip(
-                    Integer.getInteger(String.valueOf(c.getLong(0))),
+            Trip t = new Trip(
+                    c.getInt(0),
                     c.getString(1),
                     c.getString(2),
                     c.getString(3),
                     c.getString(4),
                     c.getString(5),
                     c.getString(6),
-                    c.getString(7),
-                    c.getString(8),
-                    c.getString(9)
+                    c.getString(9),
+                    c.getString(10),
+                    c.getString(11)
             );
+
+            t.setStars(Integer.getInteger(c.getString(7)));
+            t.setNumOfRates(Integer.getInteger(c.getString(8)));
+
+            return t;
         }
 
         return null;
@@ -157,6 +168,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBContract.DBTrip.COLUMN_NAME_HOTEL,
                 DBContract.DBTrip.COLUMN_NAME_ATTRACTION,
                 DBContract.DBTrip.COLUMN_NAME_STARS,
+                DBContract.DBTrip.COLUMN_NAME_RATES_COUNT,
                 DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE,
                 DBContract.DBTrip.COLUMN_NAME_DESCRIPTION,
                 DBContract.DBTrip.COLUMN_NAME_PICTURES
@@ -181,18 +193,22 @@ public class DBHelper extends SQLiteOpenHelper {
         List<Trip> trips = new ArrayList<>();
 
         do {
-            trips.add(new Trip(
-                    Integer.getInteger(String.valueOf(c.getLong(0))),
+            Trip t = new Trip(
+                    c.getInt(0),
                     c.getString(1),
                     c.getString(2),
                     c.getString(3),
                     c.getString(4),
                     c.getString(5),
                     c.getString(6),
-                    c.getString(7),
-                    c.getString(8),
-                    c.getString(9)
-            ));
+                    c.getString(9),
+                    c.getString(10),
+                    c.getString(11)
+            );
+
+            t.setStars(Integer.getInteger(c.getString(7)));
+            t.setNumOfRates(Integer.getInteger(c.getString(8)));
+            trips.add(t);
         } while(c.moveToNext());
 
         c.close();
@@ -210,6 +226,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, ArrayToString(trip.getHotels()));
         values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, ArrayToString(trip.getAttractions()));
         values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
+        values.put(DBContract.DBTrip.COLUMN_NAME_RATES_COUNT, trip.getNumOfRates());
         values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
         values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
         values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, ArrayToString(trip.getPictures()));

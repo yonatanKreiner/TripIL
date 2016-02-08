@@ -67,7 +67,7 @@ public class tripDetails extends AppCompatActivity {
     }
 
     public void onClickHotels(View view) {
-        final String[] hotelStr = getS(hotels.getText().toString());
+        final String[] hotelStr = hotels.getText().toString().split(",");
         final int[] i = {0};
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(hotelStr[i[0]]);
@@ -99,46 +99,6 @@ public class tripDetails extends AppCompatActivity {
             }
         });
 
-    }
-
-
-    public String[] getS(String buf) {
-        int count = 1;
-        int j = 0, k = 0;
-        int[] numS = null;
-
-        if (buf != null) {
-            for (int i = 0; i < buf.length(); i++)
-                if (buf.charAt(i) == ',')
-                    count++;
-            numS = new int[count];
-            for (int i = 0; i < buf.length(); i++) {
-                if (buf.charAt(i) == ',') {
-                    numS[j] = k;
-                    j++;
-                    k = -1;
-                }
-                k++;
-            }
-            numS[j]=k;
-        }
-        k = 0;
-        int p = 0;
-        String[] names = new String[count];
-        if (buf != null) {
-            for (int i = 0; i < count; i++) {
-                char[] str = new char[numS[i]];
-                for (j = 0; j < numS[i]; j++) {
-                    str[j] = buf.charAt(k);
-                    k++;
-                }
-                k++;
-                String s = new String(str);
-                names[p] = s;
-                p++;
-            }
-        }
-        return names;
     }
 
     @Override
