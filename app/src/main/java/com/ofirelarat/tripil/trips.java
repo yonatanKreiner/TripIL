@@ -36,22 +36,22 @@ public class trips extends AppCompatActivity {
         String[] imgs = {"home","home"};
         float[] stars={4,2};
         listview = (ListView) findViewById(R.id.listView);
-        listview.setAdapter(new CostumAdapter(this, id, names, date, imgs,stars));
+        listview.setAdapter(new CostumAdapter(this, id, names, date, imgs, stars));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(52, 152, 219)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-             //   if (sharedPreferences.getString("NameKey", null) != null) {
-                    Intent i = new Intent(getApplicationContext(), AddTrip.class);
-                    startActivity(i);
-            //    } else {
-              //      Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
-            //        Intent i = new Intent(getApplicationContext(), login.class);
-            //        startActivity(i);
-              //  }
+                // sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                //   if (sharedPreferences.getString("NameKey", null) != null) {
+                Intent i = new Intent(getApplicationContext(), AddTrip.class);
+                startActivity(i);
+                //    } else {
+                //      Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+                //        Intent i = new Intent(getApplicationContext(), login.class);
+                //        startActivity(i);
+                //  }
             }
         });
 
@@ -59,7 +59,7 @@ public class trips extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        int tripId = (Integer)parent.getItemAtPosition(position);
+                        int tripId = (Integer) parent.getItemAtPosition(position);
                         Intent i = new Intent(getApplicationContext(), tripDetails.class);
                         i.putExtra("input", tripId);
                         startActivity(i);
@@ -72,6 +72,17 @@ public class trips extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_details, menu);
+        MenuItem menuI = menu.findItem(R.id.back);
+        menuI.setVisible(false);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+          if (sharedPreferences.getString("NameKey", null) != null) {
+              MenuItem menuItem = menu.findItem(R.id.logIn);
+              menuItem.setTitle("LogOut");
+          }
+        else{
+              MenuItem menuItem = menu.findItem(R.id.logIn);
+              menuItem.setTitle("LogIn");
+          }
         return true;
     }
 

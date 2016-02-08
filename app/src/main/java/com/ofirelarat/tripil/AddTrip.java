@@ -158,6 +158,15 @@ public class AddTrip extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_details, menu);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        if (sharedPreferences.getString("NameKey", null) != null) {
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogOut");
+        }
+        else{
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogIn");
+        }
         return true;
     }
 

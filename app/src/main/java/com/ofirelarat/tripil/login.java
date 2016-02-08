@@ -54,10 +54,26 @@ public class login extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onClickGuest(View view){
+        Intent i=new Intent(this,register.class);
+        startActivity(i);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_details, menu);
+        MenuItem menuI = menu.findItem(R.id.back);
+        menuI.setVisible(false);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        if (sharedPreferences.getString("NameKey", null) != null) {
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogOut");
+        }
+        else{
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogIn");
+        }
         return true;
     }
 

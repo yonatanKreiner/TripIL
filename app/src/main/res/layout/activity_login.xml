@@ -48,21 +48,35 @@
             android:text="LogIn"
             android:id="@+id/button3"
             android:onClick="onClickLogin"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="10dp"
+            android:background="#3498db" />
 
         <Button
-            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Guest"
             android:id="@+id/button5"
-            android:onClick="onClickRegister"
-            android:layout_gravity="center_horizontal" />
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:background="#3498db"
+            android:onClick="onClickGuest" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="2" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="need to register?"
+        android:id="@+id/textView8"
+        android:layout_gravity="left|center_horizontal"
+        android:textColor="#34495e"
+        android:layout_marginTop="10dp"
+        android:onClick="onClickRegister" />
 
 </LinearLayout>

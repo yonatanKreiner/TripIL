@@ -1,7 +1,9 @@
 package com.ofirelarat.tripil;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +17,9 @@ import android.widget.Toast;
 
 public class register extends AppCompatActivity {
     DBHelper db;
-
+    SharedPreferences sharedPreferences;
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static final String Name = "NameKey";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,15 @@ public class register extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_details, menu);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        if (sharedPreferences.getString("NameKey", null) != null) {
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogOut");
+        }
+        else{
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogIn");
+        }
         return true;
     }
 
