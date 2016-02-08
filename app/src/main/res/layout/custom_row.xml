@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="5"
         android:layout_margin="5dp">
 
@@ -23,15 +23,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="stars"
-            android:id="@+id/star_id"
+            android:text="date"
+            android:id="@+id/date_id"
             android:layout_weight="2.82"
             android:layout_margin="5dp" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ratingBar"
+            android:numStars="4"
+            android:focusable="false"
+            android:isIndicator="true"
+            android:layout_gravity="left|bottom"
+            style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+            android:stepSize="0.1" />
     </LinearLayout>
 
     <ImageView
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:id="@+id/img_id"
         android:layout_margin="5dp"
         android:layout_weight="1" />

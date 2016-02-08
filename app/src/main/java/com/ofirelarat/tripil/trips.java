@@ -32,11 +32,11 @@ public class trips extends AppCompatActivity {
 
         int[] id={1,2};
         String[] names = {"yonatan","ofir elarat"};
-        String[] stars ={"tel aviv,stars:4.5","eilat,stars:4"};
+        String[] date ={"tel aviv","eilat"};
         String[] imgs = {"home","home"};
-
+        float[] stars={4,2};
         listview = (ListView) findViewById(R.id.listView);
-        listview.setAdapter(new CostumAdapter(this, id, names, stars, imgs));
+        listview.setAdapter(new CostumAdapter(this, id, names, date, imgs,stars));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(52, 152, 219)));

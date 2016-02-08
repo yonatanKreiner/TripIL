@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -23,12 +24,12 @@ import org.w3c.dom.Text;
 public class tripDetails extends AppCompatActivity {
 
     TextView name;
-    TextView star;
     TextView date;
     TextView hotels;
     TextView attraction;
     TextView travelGuide;
     EditText description;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,6 @@ public class tripDetails extends AppCompatActivity {
         Context context=getApplicationContext();
 
         name = (TextView) findViewById(R.id.name_id);
-        star = (TextView) findViewById(R.id.star_id);
         date = (TextView) findViewById(R.id.date_id);
         hotels = (TextView) findViewById(R.id.hotels_id);
         attraction = (TextView) findViewById(R.id.attraction_id);
@@ -50,7 +50,14 @@ public class tripDetails extends AppCompatActivity {
         description = (EditText) findViewById(R.id.description_id);
         ImageView img = (ImageView) findViewById(R.id.img_id);
         Resources res = context.getResources();
-
+        ratingBar=(RatingBar)findViewById(R.id.ratingBar);
+       // final float[] star = {0};
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            //    star[0] =ratingBar.getRating();
+            }
+        });
     }
 
     public void onClickHotels(View view) {
@@ -68,6 +75,8 @@ public class tripDetails extends AppCompatActivity {
                 .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                       Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                        startActivity(intent);
                     }
                 });
         final AlertDialog dialog=builder.create();
