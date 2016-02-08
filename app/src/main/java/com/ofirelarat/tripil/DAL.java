@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,7 +25,8 @@ import java.util.Map;
 public class DAL extends AsyncTask<String, Void, String>{
     private static DAL instance = null;
     private static Map<String, String> Repositories;
-    private static String URL = "new.data.gov/api/action/datastore_search?resource_id=";
+    private static String URL = "http://new.data.gov.il/api/action/datastore_search?resource_id=";
+    private static String result;
 
     protected DAL() {
         // Exists only to defeat instantiation.
@@ -57,7 +59,17 @@ public class DAL extends AsyncTask<String, Void, String>{
             }
 
             String response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(repository) + data));
+
+            while(result == null){
+                Thread.sleep(20);
+            }
+
+            response = result;
+            JSONArray a = new JSONArray(response);
+            //JSONObject b = a.getJSONObject("result");
+            //JSONArray c = b.getJSONArray("products");
             JSONArray arr = ((new JSONObject(response)).getJSONObject("result")).getJSONArray("products");
+            response = null;
 
             switch (repository){
                 case "Hotels":
@@ -70,15 +82,58 @@ public class DAL extends AsyncTask<String, Void, String>{
                     return arr;
             }
 
-            response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(temp) + data));
+            String.valueOf(DAL.getInstance().execute(URL + Repositories.get(temp) + data));
+
+            while(result == null){
+                Thread.sleep(20);
+            }
+
+            response = result;
 
             return concatArray(arr, ((new JSONObject(response)).getJSONObject("result")).getJSONArray("products"));
         } catch (JSONException e) {
             return null;
+        } catch (InterruptedException e) {
+            return null;
         }
     }
 
-    protected String doInBackground(String... params) {
+    HttpURLConnection urlConnection;
+
+    @Override
+    protected String doInBackground(String... args) {
+
+        StringBuilder result = new StringBuilder();
+
+        try {
+            URL url = new URL(args[0]);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+        }catch( Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            urlConnection.disconnect();
+        }
+
+
+        return result.toString();
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+
+    }
+
+    /*protected String doInBackground(String... params) {
         try {
             final URL url = new URL(params[0]);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -99,7 +154,7 @@ public class DAL extends AsyncTask<String, Void, String>{
         } catch (Exception ex) {
             return null;
         }
-    }
+    }*/
 
     private static JSONArray concatArray(JSONArray... arrs) throws JSONException {
         JSONArray result = new JSONArray();
