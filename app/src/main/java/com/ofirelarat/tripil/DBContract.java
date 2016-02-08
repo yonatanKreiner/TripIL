@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 public final class DBContract {
     public DBContract() {}
 
-    public static abstract class DBUser implements BaseColumns {
+    public static abstract class DBUser {
         public static final String TABLE_NAME = "users";
         public static final String COLUMN_NAME_USERNAME = "username";
         public static final String COLUMN_NAME_FIRST_NAME = "first_name";

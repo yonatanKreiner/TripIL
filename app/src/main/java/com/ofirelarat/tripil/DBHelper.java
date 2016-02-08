@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_TRIPS =
             "DROP TABLE IF EXISTS " + DBContract.DBTrip.TABLE_NAME;
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "TripIL.db";
 
     public DBHelper(Context context) {
@@ -64,27 +65,35 @@ public class DBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public void AddTrip(Trip trip) {
-        db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
-        values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
-        values.put(DBContract.DBTrip.COLUMN_NAME_RETURN, trip.getReturnDate());
-        values.put(DBContract.DBTrip.COLUMN_NAME_AREA, trip.getArea());
-        values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, ArrayToString(trip.getHotels()));
-        values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, ArrayToString(trip.getAttractions()));
-        values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
-        values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
-        values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
-        values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, ArrayToString(trip.getPictures()));
+    public boolean AddTrip(Trip trip) {
+        db = getWritableDatabase();
+        if((CheckDB() && FindTripsById(trip.id) != null) || (!CheckDB())) {
+            ContentValues values = new ContentValues();
+            values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
+            values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
+            values.put(DBContract.DBTrip.COLUMN_NAME_RETURN, trip.getReturnDate());
+            values.put(DBContract.DBTrip.COLUMN_NAME_AREA, trip.getArea());
+            values.put(DBContract.DBTrip.COLUMN_NAME_HOTEL, ArrayToString(trip.getHotels()));
+            values.put(DBContract.DBTrip.COLUMN_NAME_ATTRACTION, ArrayToString(trip.getAttractions()));
+            values.put(DBContract.DBTrip.COLUMN_NAME_STARS, trip.getStars());
+            values.put(DBContract.DBTrip.COLUMN_NAME_TRAVEL_GUIDE, trip.getTravelGuide());
+            values.put(DBContract.DBTrip.COLUMN_NAME_DESCRIPTION, trip.getDescription());
+            values.put(DBContract.DBTrip.COLUMN_NAME_PICTURES, ArrayToString(trip.getPictures()));
 
-        db.insert(DBContract.DBTrip.TABLE_NAME, null, values);
+            db.insert(DBContract.DBTrip.TABLE_NAME, null, values);
+            db.close();
+
+            return true;
+        }
+
         db.close();
+
+        return false;
     }
 
     //find trip by id
     public Trip FindTripsById(int id){
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
 
         String[] projection = {
                 DBContract.DBTrip._ID,
@@ -100,7 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBContract.DBTrip.COLUMN_NAME_PICTURES
         };
 
-        String selection = DBContract.DBTrip._ID + " LIKE ?";
+        String selection = DBContract.DBTrip._ID + "=?";
         String[] selectionArgs = { String.valueOf(id) };
 
         Cursor c = db.query(
@@ -137,7 +146,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //find trip by user name
     public List<Trip> FindTripsByUser(String username){
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
 
         String[] projection = {
                 DBContract.DBTrip._ID,
@@ -154,7 +163,7 @@ public class DBHelper extends SQLiteOpenHelper {
         };
 
         String sortOrder = DBContract.DBTrip._ID + " DESC";
-        String selection = DBContract.DBTrip.COLUMN_NAME_USERNAME + " LIKE ?";
+        String selection = DBContract.DBTrip.COLUMN_NAME_USERNAME + "=?";
         String[] selectionArgs = { String.valueOf(username) };
 
         Cursor c = db.query(
@@ -212,7 +221,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //delete trip from the database
     public void DeleteTrip(String trip_id){
-        String selection = DBContract.DBTrip._ID + " LIKE ?";
+        String selection = DBContract.DBTrip._ID + " = ?";
         String[] selectionArgs = { String.valueOf(trip_id) };
         db.delete(DBContract.DBTrip.TABLE_NAME, selection, selectionArgs);
         db.close();
@@ -221,7 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean AddUser(User user) {
         db = getWritableDatabase();
 
-        if(FindUser(user.username, user.password) != null) {
+        if((CheckDB() && FindUser(user.username, user.password) != null) || (!CheckDB())){
             ContentValues values = new ContentValues();
             values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
             values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
@@ -234,14 +243,16 @@ public class DBHelper extends SQLiteOpenHelper {
             db.close();
 
             return true;
-        }else{
-            return false;
         }
+
+        db.close();
+
+        return false;
     }
 
     //find user
     public User FindUser(String username, String password){
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
 
         String[] projection = {
                 DBContract.DBUser.COLUMN_NAME_USERNAME,
@@ -252,7 +263,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBContract.DBUser.COLUMN_NAME_PHONE
         };
 
-        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + " LIKE ? AND " + DBContract.DBUser.COLUMN_NAME_PASSWORD + "LIKE ?";
+        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + "=? AND " + DBContract.DBUser.COLUMN_NAME_PASSWORD + "=?";
         String[] selectionArgs = { username, password };
 
         Cursor c = db.query(
@@ -298,7 +309,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //delete user from database
     public void DeleteUser(String username){
-        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + " LIKE ?";
+        String selection = DBContract.DBUser.COLUMN_NAME_USERNAME + "=?";
         String[] selectionArgs = { String.valueOf(username) };
         db.delete(DBContract.DBUser.TABLE_NAME, selection, selectionArgs);
         db.close();
@@ -307,5 +318,18 @@ public class DBHelper extends SQLiteOpenHelper {
     private String ArrayToString(String[] arr){
         String temp = Arrays.toString(arr);
         return temp.substring(1, temp.length()-1);
+    }
+
+    private boolean CheckDB(){
+        SQLiteDatabase help = null;
+
+        try{
+            help = SQLiteDatabase.openDatabase(DATABASE_NAME, null, SQLiteDatabase.OPEN_READONLY);
+            help.close();
+        } catch(SQLiteException ex){
+            // DB doesn't exist
+        }
+
+        return help != null;
     }
 }

@@ -11,12 +11,14 @@ public class Trip {
     String[] hotels;
     String[] attractions;
     String travelGuide;
-    int stars;
+    float stars;
+    int numOfRates;
     String description;
     String[] pictures;
 
     public Trip() {
         this.stars = 0;
+        this.numOfRates = 0;
     }
 
     public Trip(int id, String username, String arrivalDate, String returnDate) {
@@ -121,12 +123,20 @@ public class Trip {
         this.travelGuide = travelGuide;
     }
 
-    public int getStars() {
+    public float getStars() {
         return stars;
     }
 
-    public void setStars(int stars) {
+    public void setStars(float stars) {
         this.stars = stars;
+    }
+
+    public int getNumOfRates() {
+        return numOfRates;
+    }
+
+    public void setNumOfRates(int numOfRates) {
+        this.numOfRates = numOfRates;
     }
 
     public String getDescription() {
@@ -143,5 +153,9 @@ public class Trip {
 
     public void setPictures(String[] pictures) {
         this.pictures = pictures;
+    }
+
+    public void Rate(float rating){
+
     }
 }

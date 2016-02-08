@@ -47,13 +47,6 @@ public class login extends AppCompatActivity {
             Intent i = new Intent(this, trips.class);
             startActivity(i);
         }
-   //     Bundle extras=getIntent().getExtras();
-     //   if(extras!=null) {
-       //     int Value = extras.getInt("id");
-         //   if (Value > 0) {
-
-           // }
-       // }
     }
 
     public void onClickRegister(View view){
