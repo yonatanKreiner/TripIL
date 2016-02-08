@@ -17,6 +17,7 @@ public class review {
 
     public void setTripID(int tripID) {this.tripID = tripID;}
 
+    
     public String getUsername() {return username;}
 
     public void setUsername(String username) {this.username = username;}
