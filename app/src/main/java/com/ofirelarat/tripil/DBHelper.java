@@ -126,35 +126,40 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.close();
 
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            List<Trip> trips = new ArrayList<>();
+        try{
+            if (c != null && c.moveToNext()){
+                List<Trip> trips = new ArrayList<>();
 
-            do {
-                Trip t = new Trip(
-                        c.getInt(0),
-                        c.getString(1),
-                        c.getString(2),
-                        c.getString(3),
-                        c.getString(4),
-                        c.getString(5),
-                        c.getString(6),
-                        c.getString(9),
-                        c.getString(10),
-                        c.getString(11)
-                );
+                do {
+                    Trip t = new Trip(
+                            c.getInt(0),
+                            c.getString(1),
+                            c.getString(2),
+                            c.getString(3),
+                            c.getString(4),
+                            c.getString(5),
+                            c.getString(6),
+                            c.getString(9),
+                            c.getString(10),
+                            c.getString(11)
+                    );
 
-                t.setStars(Integer.getInteger(c.getString(7)));
-                t.setNumOfRates(Integer.getInteger(c.getString(8)));
-                trips.add(t);
-            } while(c.moveToNext());
+                    t.setStars(Integer.getInteger(c.getString(7)));
+                    t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                    trips.add(t);
+                } while(c.moveToNext());
 
-            c.close();
 
-            return (Trip[])trips.toArray();
+                return (Trip[])trips.toArray();
+            }
+
+            return  null;
+        } catch(Exception e){
+            return null;
+        } finally{
+            if (c != null)
+                c.close();
         }
-
-        return null;
     }
 
     //find trip by id
@@ -191,26 +196,31 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.close();
 
-        if (c.getCount() > 0) {
-            c.moveToFirst();
+        try{
+            if (c != null && c.moveToNext()){
+                Trip t = new Trip(
+                        c.getInt(0),
+                        c.getString(1),
+                        c.getString(2),
+                        c.getString(3),
+                        c.getString(4),
+                        c.getString(5),
+                        c.getString(6),
+                        c.getString(9),
+                        c.getString(10),
+                        c.getString(11)
+                );
 
-            Trip t = new Trip(
-                    c.getInt(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3),
-                    c.getString(4),
-                    c.getString(5),
-                    c.getString(6),
-                    c.getString(9),
-                    c.getString(10),
-                    c.getString(11)
-            );
+                t.setStars(Integer.getInteger(c.getString(7)));
+                t.setNumOfRates(Integer.getInteger(c.getString(8)));
 
-            t.setStars(Integer.getInteger(c.getString(7)));
-            t.setNumOfRates(Integer.getInteger(c.getString(8)));
-
-            return t;
+                return t;
+            }
+        } catch(Exception e){
+            return null;
+        } finally {
+            if (c != null)
+                c.close();
         }
 
         return null;

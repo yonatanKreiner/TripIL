@@ -33,22 +33,27 @@ public class trips extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         listview = (ListView) findViewById(R.id.listView);
-        listview.setAdapter(new CostumAdapter(this, db.GetAll()));
+        Trip[] trips = db.GetAll();
+
+        if(trips != null) {
+            listview.setAdapter(new CostumAdapter(this, trips));
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(52, 152, 219)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-                //   if (sharedPreferences.getString("NameKey", null) != null) {
+                sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+                if (sharedPreferences.getString("NameKey", null) != null) {
                 Intent i = new Intent(getApplicationContext(), AddTrip.class);
                 startActivity(i);
-                //    } else {
-                //      Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
-                //        Intent i = new Intent(getApplicationContext(), login.class);
-                //        startActivity(i);
-                //  }
+                } else {
+                    Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(getApplicationContext(), login.class);
+                    startActivity(i);
+                }
             }
         });
 
