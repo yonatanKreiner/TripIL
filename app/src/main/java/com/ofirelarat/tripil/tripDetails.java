@@ -127,11 +127,11 @@ public class tripDetails extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                })
-                .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                       Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                    })
+                            .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                         startActivity(intent);
                     }
                 });
