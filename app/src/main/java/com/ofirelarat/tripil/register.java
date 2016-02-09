@@ -35,6 +35,11 @@ public class register extends AppCompatActivity {
         String mail = ((EditText)findViewById(R.id.mail)).getText().toString();
         String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
 
+        if(username.isEmpty() || pass.isEmpty()){
+            Toast.makeText(this,"have to insert user name and password",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         User user = new User(username, pass, firstName, lastName, mail, phone);
 
         if(db.AddUser(user)){

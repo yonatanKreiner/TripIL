@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class myTrips extends AppCompatActivity {
@@ -41,11 +42,23 @@ public class myTrips extends AppCompatActivity {
 
         db = new DBHelper(this);
         listview = (ListView) findViewById(R.id.ListView1);
-        Trip[] trips = db.FindTripsByUser(sharedPreferences.getString("NameKey", null));
-
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String userName=sharedPreferences.getString("NameKey", null);
+        Trip[] trips = db.FindTripsByUser(userName);
         if(trips != null) {
             listview.setAdapter(new CostumAdapter(this, trips));
         }
+        listview.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String tripId =  String.valueOf(parent.getItemAtPosition(position));
+                        Intent i = new Intent(getApplicationContext(), tripDetails.class);
+                        i.putExtra("input", tripId);
+                        startActivity(i);
+                    }
+                }
+        ) ;
     }
 
     @Override

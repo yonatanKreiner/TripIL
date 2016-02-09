@@ -28,15 +28,17 @@ public class trips extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = new DBHelper(this);
         setContentView(R.layout.activity_trips);
+
+        db = new DBHelper(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         listview = (ListView) findViewById(R.id.listView);
         Trip[] trips = db.GetAll();
 
         if(trips != null) {
-            listview.setAdapter(new CostumAdapter(this, trips));
+          listview.setAdapter(new CostumAdapter(this, trips));
+
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -46,7 +48,7 @@ public class trips extends AppCompatActivity {
             public void onClick(View view) {
                 sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-                if (sharedPreferences.getString("NameKey", null) != null) {
+                if (sharedPreferences.getString(Name, null) != null) {
                 Intent i = new Intent(getApplicationContext(), AddTrip.class);
                 startActivity(i);
                 } else {
@@ -61,7 +63,7 @@ public class trips extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        int tripId = (Integer) parent.getItemAtPosition(position);
+                        String tripId =  String.valueOf(parent.getItemAtPosition(position));
                         Intent i = new Intent(getApplicationContext(), tripDetails.class);
                         i.putExtra("input", tripId);
                         startActivity(i);

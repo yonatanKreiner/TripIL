@@ -15,26 +15,24 @@ import android.widget.TextView;
  */
 public class CostumAdapterReview extends BaseAdapter {
     Context context;
-    String[] names;
-    String[] messege;
+    review[] r;
     private static LayoutInflater inflater = null;
-    public CostumAdapterReview(Context context,String[] names,String[] messege) {
+    public CostumAdapterReview(Context context,review[]r) {
         this.context = context;
-        this.names = names;
-        this.messege = messege;
+        this.r=r;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return names.length;
+        return r.length;
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return names[position];
+        return r[position].getUsername();
     }
 
     @Override
@@ -50,9 +48,9 @@ public class CostumAdapterReview extends BaseAdapter {
         if (vi == null)
             vi = inflater.inflate(R.layout.review_row, null);
         TextView name = (TextView) vi.findViewById(R.id.user_id);
-        name.setText(names[position]);
+        name.setText(r[position].getUsername());
         TextView message = (TextView) vi.findViewById(R.id.messegeId);
-        message.setText(messege[position]);
+        message.setText(r[position].getMessage());
         return vi;
     }
 }

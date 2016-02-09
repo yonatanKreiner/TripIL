@@ -59,9 +59,9 @@ public class CostumAdapter  extends BaseAdapter {
             vi = inflater.inflate(R.layout.custom_row, null);
         TextView name = (TextView) vi.findViewById(R.id.user_id);
         name.setText(trips[position].getUsername());
-        TextView date = (TextView) vi.findViewById(R.id.date_id);
-        date.setText(trips[position].getArrivalDate() + " - " + trips[position].getReturnDate());
-       loadImageFromStorage(trips[position].getPictures()[0],vi);
+        TextView date = (TextView) vi.findViewById(R.id.dateId);
+        date.setText(trips[position].getArrivalDate() + "-" + trips[position].getReturnDate());
+        loadImageFromStorage(trips[position].getPictures()[0], vi);
         RatingBar ratingBar=(RatingBar)vi.findViewById(R.id.ratingBar);
         ratingBar.setRating(trips[position].getStars());
         return vi;
@@ -69,16 +69,11 @@ public class CostumAdapter  extends BaseAdapter {
 
     private void loadImageFromStorage(String path,View vi)
     {
-        try {
-            File f=new File(path);
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+        File imageFile=new File(path);
+        if(imageFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(path);
             ImageView img=(ImageView)vi.findViewById(R.id.img_id);
-            img.setImageBitmap(b);
+            img.setImageBitmap(myBitmap);
         }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-
     }
 }

@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +19,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class tripDetails extends AppCompatActivity {
     TextView name;
@@ -44,7 +51,6 @@ public class tripDetails extends AppCompatActivity {
         if (inputData==null)
             return;
         String input = inputData.getString("input");
-        Context context=getApplicationContext();
 
         name = (TextView) findViewById(R.id.name_id);
         date = (TextView) findViewById(R.id.date_id);
@@ -53,10 +59,10 @@ public class tripDetails extends AppCompatActivity {
         travelGuide = (TextView) findViewById(R.id.travelG);
         description = (EditText) findViewById(R.id.description_id);
         ImageView img = (ImageView) findViewById(R.id.img_id);
-        Resources res = context.getResources();
         ratingBar=(RatingBar)findViewById(R.id.ratingBar);
 
-        trip=db.FindTripsById(Integer.valueOf(input));
+        int tripId=Integer.parseInt(input);
+        trip=db.FindTripsById(tripId);
         if(trip==null){
             Intent intent = new Intent(getApplicationContext(), trips.class);
             startActivity(intent);
@@ -67,19 +73,43 @@ public class tripDetails extends AppCompatActivity {
         attraction.setText(Common.ArrayToString(trip.getAttractions()));
         travelGuide.setText(trip.getTravelGuide());
         description.setText(trip.getDescription());
+        String path=trip.getPictures()[0];
+        loadImageFromStorage(path);
 
+        EditText re=(EditText)findViewById(R.id.editText);
+        Button btn=(Button)findViewById(R.id.btnId);
         ratingBar.setRating(trip.getStars());
         if (sharedPreferences.getString("NameKey", null) == null) {
             ratingBar.setIsIndicator(true);
+            re.setVisibility(View.INVISIBLE);
+            btn.setVisibility(View.INVISIBLE);
         }
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (sharedPreferences.getString("NameKey", null) != null) {
-                    trip.onRate(ratingBar.getRating());
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    if (sharedPreferences.getString("NameKey", null) != null) {
+                        trip.onRate(ratingBar.getRating());
+                    }
                 }
-            }
-        });
+            });
+
+        ListView listview = (ListView) findViewById(R.id.listView);
+        review[] r = db.FindReviewByTripId(trip.getId());
+
+        if(r != null) {
+            listview.setAdapter(new CostumAdapterReview(this,r));
+        }
+    }
+
+    private void loadImageFromStorage(String path)
+    {
+        File imageFile=new File(path);
+        if(imageFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(path);
+            ImageView img=(ImageView)findViewById(R.id.img_id);
+            img.setImageBitmap(myBitmap);
+        }
+
     }
 
     public void onClickHotels(View view) {
@@ -114,6 +144,12 @@ public class tripDetails extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void onClickSend(View view){
+       String reviewE=((EditText)findViewById(R.id.editText)).getText().toString();
+        review r=new review(trip.getId(),sharedPreferences.getString("NameKey", null),reviewE);
+        db.AddReview(r);
     }
 
     @Override

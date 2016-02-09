@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.Vector;
 
 public class AddTrip extends AppCompatActivity {
 
+    public static String path= Environment.getExternalStorageDirectory().getAbsolutePath();
     private static final int RESULT_LOAD_IMAGE=1;
     private ImageView img;
     private EditText attraction;
@@ -165,11 +167,9 @@ public class AddTrip extends AppCompatActivity {
         img.buildDrawingCache();
         String path = null;
         Bitmap bmap = img.getDrawingCache();
-        try {
-             path=saveToInternalStorage(bmap);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        path=saveToInternalStorage(bmap);
+
 
 
         iPic++;
@@ -189,25 +189,25 @@ public class AddTrip extends AppCompatActivity {
         }
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage) throws IOException {
-        int iPic=sharedPreferences.getInt(picName, 0);
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,String.valueOf(iPic)+".jpg");
+    private String saveToInternalStorage(Bitmap finalBitmap) {
+        int iPic = sharedPreferences.getInt(picName, 0);
 
-        FileOutputStream fos = null;
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
+        String fname = "Image-" + iPic + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
         try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            fos.close();
         }
-        return directory.getAbsolutePath()+String.valueOf(iPic)+".jpg";
+        return file.getPath();
     }
 
     @Override
