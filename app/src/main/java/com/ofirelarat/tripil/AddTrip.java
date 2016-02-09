@@ -1,9 +1,11 @@
 package com.ofirelarat.tripil;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Vector;
 
 public class AddTrip extends AppCompatActivity {
@@ -156,7 +161,17 @@ public class AddTrip extends AppCompatActivity {
         String description=descriptionE.getText().toString();
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         int iPic=sharedPreferences.getInt(picName, 0);
-        img.setImageResource(getResources().getIdentifier(String.valueOf(iPic), "drawable", getApplication().getPackageName()));
+
+        img.buildDrawingCache();
+        String path = null;
+        Bitmap bmap = img.getDrawingCache();
+        try {
+             path=saveToInternalStorage(bmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         iPic++;
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(picName);
@@ -164,13 +179,35 @@ public class AddTrip extends AppCompatActivity {
         editor.putInt(picName, iPic);
         editor.commit();
 
-        Trip trip=new Trip(userName,arrivalDate,returnDate,area,hotel,attractions,travelGuide,description,String.valueOf(iPic));
+
+        Trip trip=new Trip(userName,arrivalDate,returnDate,area,hotel,attractions,travelGuide,description,path);
         if(db.AddTrip(trip)){
             Intent i = new Intent(this, trips.class);
             startActivity(i);
         } else{
             Toast.makeText(this, "user name already exist", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage) throws IOException {
+        int iPic=sharedPreferences.getInt(picName, 0);
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,String.valueOf(iPic)+".jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fos.close();
+        }
+        return directory.getAbsolutePath();
     }
 
     @Override

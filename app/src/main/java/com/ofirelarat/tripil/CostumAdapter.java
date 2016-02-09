@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 /**
  * Created by ofir elarat on 21-Jan-16.
  */
@@ -57,12 +61,24 @@ public class CostumAdapter  extends BaseAdapter {
         name.setText(trips[position].getUsername());
         TextView date = (TextView) vi.findViewById(R.id.date_id);
         date.setText(trips[position].getArrivalDate() + " - " + trips[position].getReturnDate());
-        ImageView img=(ImageView)vi.findViewById(R.id.img_id);
-        Resources res =context.getResources();
-        int id = res.getIdentifier(trips[position].getPictures()[0],"drawable",context.getPackageName());
-        img.setImageResource(id);
+       loadImageFromStorage(trips[position].getPictures()[0],vi);
         RatingBar ratingBar=(RatingBar)vi.findViewById(R.id.ratingBar);
         ratingBar.setRating(trips[position].getStars());
         return vi;
+    }
+
+    private void loadImageFromStorage(String path,View vi)
+    {
+        try {
+            File f=new File(path);
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            ImageView img=(ImageView)vi.findViewById(R.id.img_id);
+            img.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }
