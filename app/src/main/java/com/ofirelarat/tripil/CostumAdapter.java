@@ -42,7 +42,7 @@ public class CostumAdapter  extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return trips[position].getId();
+        return trips[position];
     }
 
     @Override

@@ -79,6 +79,7 @@ public class tripDetails extends AppCompatActivity {
         EditText re=(EditText)findViewById(R.id.editText);
         Button btn=(Button)findViewById(R.id.btnId);
         ratingBar.setRating(trip.getStars());
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         if (sharedPreferences.getString("NameKey", null) == null) {
             ratingBar.setIsIndicator(true);
             re.setVisibility(View.INVISIBLE);
@@ -90,6 +91,8 @@ public class tripDetails extends AppCompatActivity {
                     if (sharedPreferences.getString("NameKey", null) != null) {
                         trip.onRate(ratingBar.getRating());
                     }
+                    ratingBar.setRating(trip.getStars());
+                    ratingBar.setIsIndicator(true);
                 }
             });
 

@@ -63,9 +63,9 @@ public class trips extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String tripId =  String.valueOf(parent.getItemAtPosition(position));
+                        Trip tripId = (Trip) parent.getItemAtPosition(position);
                         Intent i = new Intent(getApplicationContext(), tripDetails.class);
-                        i.putExtra("input", tripId);
+                        i.putExtra("input", tripId.getId());
                         startActivity(i);
                     }
                 }
