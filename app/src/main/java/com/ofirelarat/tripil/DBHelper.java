@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + DBContract.DBTrip.TABLE_NAME;
 
     private static final String SQL_CREATE_REVIEWS =
-            "CREATE TABLE " + DBContract.DBUser.TABLE_NAME + "(" +
+            "CREATE TABLE " + DBContract.DBReview.TABLE_NAME + "(" +
                     DBContract.DBReview._ID + " INTEGER PRIMARY KEY," +
                     DBContract.DBReview.COLUMN_NAME_TRIP_ID + " TEXT NOT NULL," +
                     DBContract.DBReview.COLUMN_NAME_USERNAME + " TEXT NOT NULL," +
@@ -60,7 +60,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_REVIEWS =
             "DROP TABLE IF EXISTS " + DBContract.DBReview.TABLE_NAME;
 
-    public static final int DATABASE_VERSION = 21;
+    public static final int DATABASE_VERSION = 22;
     public static final String DATABASE_NAME = "TripIL.db";
 
     public DBHelper(Context context) {

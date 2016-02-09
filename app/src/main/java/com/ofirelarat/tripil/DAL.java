@@ -26,7 +26,7 @@ public class DAL extends AsyncTask<String, Void, String>{
     private static DAL instance = null;
     private static Map<String, String> Repositories;
     private static String URL = "http://new.data.gov.il/api/action/datastore_search?resource_id=";
-    private static String result;
+    private static String currentRepository;
 
     protected DAL() {
         // Exists only to defeat instantiation.
@@ -46,115 +46,66 @@ public class DAL extends AsyncTask<String, Void, String>{
         return instance;
     }
 
-    public static JSONArray Request(String repository) {
-        return Request(repository, "");
+    public static void Request(String repository) {
+        Request(repository, "");
     }
 
-    public static JSONArray Request(String repository, String data) {
+    public static void Request(String repository, String data) {
         try {
-            String temp = "";
-
-            if (data != ""){
+            if (data != "") {
                 data = "&q=" + data;
             }
 
-            String response = String.valueOf(DAL.getInstance().execute(URL + Repositories.get(repository) + data));
-
-            while(result == null){
-                Thread.sleep(20);
-            }
-
-            response = result;
-            JSONArray a = new JSONArray(response);
-            //JSONObject b = a.getJSONObject("result");
-            //JSONArray c = b.getJSONArray("products");
-            JSONArray arr = ((new JSONObject(response)).getJSONObject("result")).getJSONArray("products");
-            response = null;
-
-            switch (repository){
-                case "Hotels":
-                    temp = "Zimmers";
-                    break;
-                case "Zimmers":
-                    temp = "Hotels";
-                    break;
-                default:
-                    return arr;
-            }
-
-            String.valueOf(DAL.getInstance().execute(URL + Repositories.get(temp) + data));
-
-            while(result == null){
-                Thread.sleep(20);
-            }
-
-            response = result;
-
-            return concatArray(arr, ((new JSONObject(response)).getJSONObject("result")).getJSONArray("products"));
-        } catch (JSONException e) {
-            return null;
-        } catch (InterruptedException e) {
-            return null;
+            currentRepository = repository;
+            String.valueOf(DAL.getInstance().execute(URL + Repositories.get(repository) + data));
+        } catch (Exception e){
+            // none
         }
-    }
-
-    HttpURLConnection urlConnection;
-
-    @Override
-    protected String doInBackground(String... args) {
-
-        StringBuilder result = new StringBuilder();
-
-        try {
-            URL url = new URL(args[0]);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-
-        }catch( Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            urlConnection.disconnect();
-        }
-
-
-        return result.toString();
     }
 
     @Override
     protected void onPostExecute(String result) {
+        try {
+            JSONArray arr = ((new JSONObject(result)).getJSONObject("result")).getJSONArray("products");
 
+            switch (currentRepository){
+                case "Hotels":
+
+                    break;
+                case "Zimmers":
+                    break;
+                case "Guides":
+                    break;
+                case "Attractions":
+                    break;
+            }
+        } catch (Exception e){
+            // none
+        }
     }
 
-    /*protected String doInBackground(String... params) {
+    @Override
+    protected String doInBackground(String... params) {
         try {
-            final URL url = new URL(params[0]);
+            URL url = new URL(params[0]);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-
             int responseCode = con.getResponseCode();
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
 
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
+
             in.close();
 
             return response.toString();
         } catch (Exception ex) {
             return null;
         }
-    }*/
+    }
 
     private static JSONArray concatArray(JSONArray... arrs) throws JSONException {
         JSONArray result = new JSONArray();
