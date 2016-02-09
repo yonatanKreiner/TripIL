@@ -46,7 +46,21 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_TRIPS =
             "DROP TABLE IF EXISTS " + DBContract.DBTrip.TABLE_NAME;
 
-    public static final int DATABASE_VERSION = 20;
+    private static final String SQL_CREATE_REVIEWS =
+            "CREATE TABLE " + DBContract.DBUser.TABLE_NAME + "(" +
+                    DBContract.DBReview._ID + " INTEGER PRIMARY KEY," +
+                    DBContract.DBReview.COLUMN_NAME_TRIP_ID + " TEXT NOT NULL," +
+                    DBContract.DBReview.COLUMN_NAME_USERNAME + " TEXT NOT NULL," +
+                    DBContract.DBReview.COLUMN_NAME_MESSAGE + " TEXT NOT NULL, FOREIGN KEY(" +
+                    DBContract.DBReview.COLUMN_NAME_TRIP_ID + ") REFERENCES " +
+                    DBContract.DBTrip.TABLE_NAME + "(" + DBContract.DBTrip._ID + "), FOREIGN KEY(" +
+                    DBContract.DBReview.COLUMN_NAME_USERNAME + ") REFERENCES " +
+                    DBContract.DBUser.TABLE_NAME + "(" + DBContract.DBUser.COLUMN_NAME_USERNAME + "))";
+
+    private static final String SQL_DELETE_REVIEWS =
+            "DROP TABLE IF EXISTS " + DBContract.DBReview.TABLE_NAME;
+
+    public static final int DATABASE_VERSION = 21;
     public static final String DATABASE_NAME = "TripIL.db";
 
     public DBHelper(Context context) {
@@ -56,11 +70,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_USERS);
         db.execSQL(SQL_CREATE_TRIPS);
+        db.execSQL(SQL_CREATE_REVIEWS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_USERS);
         db.execSQL(SQL_DELETE_TRIPS);
+        db.execSQL(SQL_DELETE_REVIEWS);
         onCreate(db);
     }
 
@@ -411,5 +427,63 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { String.valueOf(username) };
         db.delete(DBContract.DBUser.TABLE_NAME, selection, selectionArgs);
         db.close();
+    }
+
+    public boolean AddReview(review review){
+        try {
+            db = getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(DBContract.DBReview.COLUMN_NAME_TRIP_ID, review.getTripID());
+            values.put(DBContract.DBReview.COLUMN_NAME_USERNAME, review.getUsername());
+            values.put(DBContract.DBReview.COLUMN_NAME_MESSAGE, review.getMessage());
+            db.insert(DBContract.DBReview.TABLE_NAME, null, values);
+
+            db.close();
+
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public review FindReviewByTripId(int id){
+        db = getReadableDatabase();
+
+        String[] projection = {
+                DBContract.DBReview.COLUMN_NAME_TRIP_ID,
+                DBContract.DBReview.COLUMN_NAME_USERNAME,
+                DBContract.DBReview.COLUMN_NAME_MESSAGE
+        };
+
+        String selection = DBContract.DBReview.COLUMN_NAME_TRIP_ID + "=?";
+        String[] selectionArgs = { String.valueOf(id) };
+
+        Cursor c = db.query(
+                DBContract.DBReview.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        try{
+            if (c != null && c.moveToNext()) {
+                return new review(
+                        c.getInt(0),
+                        c.getString(1),
+                        c.getString(2)
+                );
+            }
+            return null;
+        } catch(Exception e){
+            c.close();
+
+            return null;
+        } finally {
+            if (c != null)
+                c.close();
+        }
     }
 }

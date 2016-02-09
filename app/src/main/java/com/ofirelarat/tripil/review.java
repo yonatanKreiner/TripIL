@@ -6,7 +6,7 @@ package com.ofirelarat.tripil;
 public class review {
     private int tripID;
     private String username;
-    private  String message;
+    private String message;
 
     public review(int tripID, String username, String message) {
         this.tripID = tripID;
@@ -16,7 +16,6 @@ public class review {
     public int getTripID() {return tripID;}
 
     public void setTripID(int tripID) {this.tripID = tripID;}
-
     
     public String getUsername() {return username;}
 
@@ -25,6 +24,5 @@ public class review {
     public String getMessage() {return message;}
 
     public void setMessage(String message) {this.message = message;}
-
 
 }
