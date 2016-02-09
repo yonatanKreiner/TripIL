@@ -163,8 +163,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while(c.moveToNext());
 
                 db.close();
+                Trip[] ret = new Trip[trips.size()];
+                trips.toArray(ret);
 
-                return (Trip[])trips.toArray();
+                return ret;
             }
 
             return  null;
@@ -296,8 +298,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while(c.moveToNext());
 
                 db.close();
+                Trip[] ret = new Trip[trips.size()];
+                trips.toArray(ret);
 
-                return (Trip[]) trips.toArray();
+                return ret;
             }
 
             return null;
@@ -489,7 +493,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.close();
 
-            return (review[]) reviews.toArray();
+            review[] ret = new review[reviews.size()];
+            reviews.toArray(ret);
+
+            return ret;
         } catch(Exception e){
             c.close();
 
