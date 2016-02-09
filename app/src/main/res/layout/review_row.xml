@@ -2,7 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <TextView
@@ -19,6 +19,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="messege"
         android:id="@+id/messegeId"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="left"
         android:textStyle="italic" />
 </LinearLayout>
