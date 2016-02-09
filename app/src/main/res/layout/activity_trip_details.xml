@@ -39,37 +39,83 @@
         android:id="@+id/ratingBar"
         android:numStars="4" />
 
-    <TextView
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Hotels:"
+                android:id="@+id/textView9" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Hotels,Hostels"
+                android:id="@+id/hotels_id"
+                android:onClick="onClickHotels" />
+        </LinearLayout>
+
+        <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Attracions:"
+                android:id="@+id/textView10" />
+
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Hotels,Hostels"
-            android:id="@+id/hotels_id"
-            android:onClick="onClickHotels" />
+            android:text="Attraction"
+            android:id="@+id/attraction_id" />
+        </LinearLayout>
 
-    <Space
+        <Space
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Attraction"
-        android:id="@+id/attraction_id" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Travel Guide:"
+                android:id="@+id/textView11" />
 
-     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Travel Guide"
-        android:id="@+id/travelG" />
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Travel Guide"
+            android:id="@+id/travelG" />
+        </LinearLayout>
 
-    <EditText
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="description:"
+            android:id="@+id/textView12" />
+
+        <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="3"

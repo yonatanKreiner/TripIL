@@ -225,8 +225,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         c.getString(11)
                 );
 
-                t.setStars(Integer.getInteger(c.getString(7)));
-                t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                t.setStars(Float.parseFloat(c.getString(7)));
+                t.setNumOfRates(Integer.parseInt(c.getString(8)));
                 db.close();
 
                 return t;

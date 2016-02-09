@@ -50,7 +50,7 @@ public class tripDetails extends AppCompatActivity {
         Bundle inputData=getIntent().getExtras();
         if (inputData==null)
             return;
-        String input = inputData.getString("input");
+        int input = inputData.getInt("input");
 
         name = (TextView) findViewById(R.id.name_id);
         date = (TextView) findViewById(R.id.date_id);
@@ -61,8 +61,9 @@ public class tripDetails extends AppCompatActivity {
         ImageView img = (ImageView) findViewById(R.id.img_id);
         ratingBar=(RatingBar)findViewById(R.id.ratingBar);
 
-        int tripId=Integer.parseInt(input);
-        trip=db.FindTripsById(tripId);
+        db = new DBHelper(this);
+        trip=db.FindTripsById(input);
+
         if(trip==null){
             Intent intent = new Intent(getApplicationContext(), trips.class);
             startActivity(intent);
@@ -91,6 +92,7 @@ public class tripDetails extends AppCompatActivity {
                     if (sharedPreferences.getString("NameKey", null) != null) {
                         trip.onRate(ratingBar.getRating());
                     }
+                    db.UpdateTrip(trip);
                     ratingBar.setRating(trip.getStars());
                     ratingBar.setIsIndicator(true);
                 }
@@ -150,9 +152,15 @@ public class tripDetails extends AppCompatActivity {
     }
 
     public void onClickSend(View view){
-       String reviewE=((EditText)findViewById(R.id.editText)).getText().toString();
-        review r=new review(trip.getId(),sharedPreferences.getString("NameKey", null),reviewE);
-        db.AddReview(r);
+       //String reviewE=((EditText)findViewById(R.id.editText)).getText().toString();
+        //review r=new review(trip.getId(),sharedPreferences.getString("NameKey", null),reviewE);
+        //db.AddReview(r);
+
+     //   ListView listview = (ListView) findViewById(R.id.listView);
+       // review[] rs = db.FindReviewByTripId(trip.getId());
+        //if(r != null) {
+          //  listview.setAdapter(new CostumAdapterReview(this,rs));
+      //  }
     }
 
     @Override
