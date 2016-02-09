@@ -71,7 +71,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean AddTrip(Trip trip) {
         db = getWritableDatabase();
 
-        if((CheckDB() && FindTripsById(trip.id) != null) || (!CheckDB())) {
+        if(FindTripsById(trip.id) == null) {
             ContentValues values = new ContentValues();
             values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
             values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
@@ -227,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //find trip by user name
-    public List<Trip> FindTripsByUser(String username){
+    public Trip[] FindTripsByUser(String username){
         db = getReadableDatabase();
 
         String[] projection = {
@@ -284,7 +284,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         c.close();
 
-        return trips;
+        return (Trip[]) trips.toArray();
     }
 
     //update trip
@@ -318,7 +318,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean AddUser(User user) {
         db = getWritableDatabase();
 
-        if((CheckDB() && FindUser(user.username, user.password) != null) || (!CheckDB())){
+        if(FindUser(user.username, user.password) == null){
             ContentValues values = new ContentValues();
             values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
             values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
@@ -401,18 +401,5 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { String.valueOf(username) };
         db.delete(DBContract.DBUser.TABLE_NAME, selection, selectionArgs);
         db.close();
-    }
-
-    private boolean CheckDB(){
-        SQLiteDatabase help = null;
-
-        try{
-            help = SQLiteDatabase.openDatabase(DATABASE_NAME, null, SQLiteDatabase.OPEN_READONLY);
-            help.close();
-        } catch(SQLiteException ex){
-            // DB doesn't exist
-        }
-
-        return help != null;
     }
 }
