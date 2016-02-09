@@ -45,16 +45,18 @@ public class myTrips extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         String userName=sharedPreferences.getString("NameKey", null);
         Trip[] trips = db.FindTripsByUser(userName);
+
         if(trips != null) {
             listview.setAdapter(new CostumAdapter(this, trips));
         }
+
         listview.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Trip tripId = (Trip) parent.getItemAtPosition(position);
+                        Trip t = (Trip) parent.getItemAtPosition(position);
                         Intent i = new Intent(getApplicationContext(), tripDetails.class);
-                        i.putExtra("input", tripId.getId());
+                        i.putExtra("input", t.getId());
                         startActivity(i);
                     }
                 }

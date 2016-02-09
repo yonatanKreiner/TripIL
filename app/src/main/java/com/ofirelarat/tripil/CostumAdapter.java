@@ -61,7 +61,11 @@ public class CostumAdapter  extends BaseAdapter {
         name.setText(trips[position].getUsername());
         TextView date = (TextView) vi.findViewById(R.id.dateId);
         date.setText(trips[position].getArrivalDate() + "-" + trips[position].getReturnDate());
-        loadImageFromStorage(trips[position].getPictures()[0], vi);
+
+        if(trips[position].getPictures()[0] != "") {
+            loadImageFromStorage(trips[position].getPictures()[0], vi);
+        }
+
         RatingBar ratingBar=(RatingBar)vi.findViewById(R.id.ratingBar);
         ratingBar.setRating(trips[position].getStars());
         return vi;

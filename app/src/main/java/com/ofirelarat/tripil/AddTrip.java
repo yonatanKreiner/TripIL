@@ -29,7 +29,8 @@ import java.util.Vector;
 public class AddTrip extends AppCompatActivity {
 
     public static String path= Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static final int RESULT_LOAD_IMAGE=1;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private boolean didUpload = false;
     private ImageView img;
     private EditText attraction;
     private EditText hotels;
@@ -45,15 +46,17 @@ public class AddTrip extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
     public static final String picName="picName";
-
-    boolean flag=false;
+    boolean flag = false;
     DBHelper db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        didUpload = false;
         setContentView(R.layout.activity_add_trip);
         db = new DBHelper(this);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
         if(sharedPreferences.getString("NameKey",null)==null) {
             Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
             Intent i = new Intent(getApplicationContext(), login.class);
@@ -109,13 +112,15 @@ public class AddTrip extends AppCompatActivity {
     }
 
     public void onClickUpload(View view){
-        flag=false;
+        flag = false;
+        didUpload = true;
         Intent galleryIntent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
 
     public void onClickCamera(View view){
-        flag=true;
+        flag = true;
+        didUpload = true;
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
     }
@@ -137,7 +142,7 @@ public class AddTrip extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(flag==false) {
+        if(!flag) {
             if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
                 Uri selectedImage = data.getData();
                 img.setImageURI(selectedImage);
@@ -151,36 +156,26 @@ public class AddTrip extends AppCompatActivity {
 
 
     public void onClickSubmit(View view){
-        String userName=sharedPreferences.getString("NameKey", null);
-        String arrivalDate=spinnerDay.getSelectedItem().toString()+"/"+spinnerMonth.getSelectedItem().toString()+"/"+spinnerYear.getSelectedItem().toString();
-        String returnDate=spinnerDayR.getSelectedItem().toString()+"/"+spinnerMonthR.getSelectedItem().toString()+"/"+spinnerYearR.getSelectedItem().toString();
-        String area=dropdown.getSelectedItem().toString();
-        String hotel=hotels.getText().toString();
-        String attractions=attraction.getText().toString();
-        EditText travelG=(EditText)findViewById(R.id.travelG);
-        String travelGuide=travelG.getText().toString();
-        EditText descriptionE=(EditText)findViewById(R.id.description);
-        String description=descriptionE.getText().toString();
-        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        int iPic=sharedPreferences.getInt(picName, 0);
-
+        String userName = sharedPreferences.getString("NameKey", null);
+        String arrivalDate = spinnerDay.getSelectedItem().toString()+ "/" +
+                spinnerMonth.getSelectedItem().toString() + "/" +
+                spinnerYear.getSelectedItem().toString();
+        String returnDate = spinnerDayR.getSelectedItem().toString() + "/" +
+                spinnerMonthR.getSelectedItem().toString() + "/" +
+                spinnerYearR.getSelectedItem().toString();
+        String area = dropdown.getSelectedItem().toString();
+        String hotel = hotels.getText().toString();
+        String attractions = attraction.getText().toString();
+        EditText travelG = (EditText)findViewById(R.id.travelG);
+        String travelGuide = travelG.getText().toString();
+        EditText descriptionE = (EditText)findViewById(R.id.description);
+        String description = descriptionE.getText().toString();
         img.buildDrawingCache();
         String path = null;
         Bitmap bmap = img.getDrawingCache();
+        path = saveToInternalStorage(bmap);
+        Trip trip = new Trip(userName, arrivalDate, returnDate, area, hotel, attractions, travelGuide, description, path);
 
-        path=saveToInternalStorage(bmap);
-
-
-
-        iPic++;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(picName);
-        editor.commit();
-        editor.putInt(picName, iPic);
-        editor.commit();
-
-
-        Trip trip=new Trip(userName,arrivalDate,returnDate,area,hotel,attractions,travelGuide,description,path);
         if(db.AddTrip(trip)){
             Intent i = new Intent(this, trips.class);
             startActivity(i);
@@ -190,24 +185,42 @@ public class AddTrip extends AppCompatActivity {
     }
 
     private String saveToInternalStorage(Bitmap finalBitmap) {
-        int iPic = sharedPreferences.getInt(picName, 0);
+        String ret;
 
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/saved_images");
-        myDir.mkdirs();
-        String fname = "Image-" + iPic + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
+        if(didUpload) {
+            sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+            int iPic = sharedPreferences.getInt(picName, 0);
+            iPic++;
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(picName);
+            editor.commit();
+            editor.putInt(picName, iPic);
+            editor.commit();
+            String root = getFilesDir().toString();
+            File myDir = new File(root + "/saved_images");
+            myDir.mkdirs();
+            String fname = "Image-" + iPic + ".jpg";
+            File file = new File(myDir, fname);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (file.exists())
+                file.delete();
+
+            try {
+                FileOutputStream out = new FileOutputStream(file);
+                finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                out.flush();
+                out.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ret = file.getPath().toString();
+        } else{
+            return "";
         }
-        return file.getPath();
+
+        return ret;
     }
 
     @Override
@@ -215,38 +228,42 @@ public class AddTrip extends AppCompatActivity {
         //return super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_details, menu);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
         if (sharedPreferences.getString("NameKey", null) != null) {
             MenuItem menuItem = menu.findItem(R.id.logIn);
             menuItem.setTitle("LogOut");
-        }
-        else{
+        } else{
             MenuItem menuItem = menu.findItem(R.id.logIn);
             menuItem.setTitle("LogIn");
             MenuItem menuItemT = menu.findItem(R.id.MyTrips);
             menuItemT.setVisible(false);
         }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
+
         switch (item.getItemId()){
             case R.id.back:
-                 i = new Intent(getApplicationContext(), trips.class);
+                i = new Intent(getApplicationContext(), trips.class);
                 startActivity(i);
-                    return true;
+
+                return true;
             case R.id.logIn:
-                 i = new Intent(getApplicationContext(), login.class);
+                i = new Intent(getApplicationContext(), login.class);
                 startActivity(i);
+
                 return true;
             case R.id.MyTrips:
                 i = new Intent(getApplicationContext(), myTrips.class);
                 startActivity(i);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 }
