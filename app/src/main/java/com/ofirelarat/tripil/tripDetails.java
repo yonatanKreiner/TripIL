@@ -161,7 +161,7 @@ public class tripDetails extends AppCompatActivity {
         ListView listview = (ListView) findViewById(R.id.listView);
         review[] rs = db.FindReviewByTripId(trip.getId());
         if(rs != null) {
-            listview.setAdapter(new CostumAdapterReview(this,rs));
+            listview.setAdapter(new CostumAdapterReview(this, rs));
             ((EditText)findViewById(R.id.editText)).setText("");
        }
     }
