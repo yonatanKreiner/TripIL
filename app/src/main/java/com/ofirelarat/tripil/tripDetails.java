@@ -42,6 +42,7 @@ public class tripDetails extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
     DBHelper db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,12 +130,12 @@ public class tripDetails extends AppCompatActivity {
                     }
                     })
                             .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                        startActivity(intent);
-                    }
-                });
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
         final AlertDialog dialog=builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -152,15 +153,16 @@ public class tripDetails extends AppCompatActivity {
     }
 
     public void onClickSend(View view){
-       //String reviewE=((EditText)findViewById(R.id.editText)).getText().toString();
-        //review r=new review(trip.getId(),sharedPreferences.getString("NameKey", null),reviewE);
-        //db.AddReview(r);
+        String reviewE=((EditText)findViewById(R.id.editText)).getText().toString();
+        review r=new review(trip.getId(),sharedPreferences.getString("NameKey", null),reviewE);
+        db.AddReview(r);
 
-     //   ListView listview = (ListView) findViewById(R.id.listView);
-       // review[] rs = db.FindReviewByTripId(trip.getId());
-        //if(r != null) {
-          //  listview.setAdapter(new CostumAdapterReview(this,rs));
-      //  }
+        ListView listview = (ListView) findViewById(R.id.listView);
+        review[] rs = db.FindReviewByTripId(trip.getId());
+
+        if(rs != null) {
+            listview.setAdapter(new CostumAdapterReview(this,rs));
+        }
     }
 
     @Override

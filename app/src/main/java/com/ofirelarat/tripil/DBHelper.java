@@ -439,21 +439,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean AddReview(review review){
-        try {
-            db = getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(DBContract.DBReview.COLUMN_NAME_TRIP_ID, review.getTripID());
-            values.put(DBContract.DBReview.COLUMN_NAME_USERNAME, review.getUsername());
-            values.put(DBContract.DBReview.COLUMN_NAME_MESSAGE, review.getMessage());
-            db.insert(DBContract.DBReview.TABLE_NAME, null, values);
+    public void AddReview(review review){
+        db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DBContract.DBReview.COLUMN_NAME_TRIP_ID, review.getTripID());
+        values.put(DBContract.DBReview.COLUMN_NAME_USERNAME, review.getUsername());
+        values.put(DBContract.DBReview.COLUMN_NAME_MESSAGE, review.getMessage());
+        db.insert(DBContract.DBReview.TABLE_NAME, null, values);
 
-            db.close();
-
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+        db.close();
     }
 
     public review[] FindReviewByTripId(int id){
@@ -479,24 +473,28 @@ public class DBHelper extends SQLiteOpenHelper {
         );
 
         try {
-            List<review> reviews = new ArrayList<>();
+            if (c != null && c.moveToNext()) {
+                List<review> reviews = new ArrayList<>();
 
-            do {
-                review r = new review(
-                        c.getInt(0),
-                        c.getString(1),
-                        c.getString(2)
-                );
+                do {
+                    review r = new review(
+                            c.getInt(0),
+                            c.getString(1),
+                            c.getString(2)
+                    );
 
-                reviews.add(r);
-            } while (c.moveToNext());
+                    reviews.add(r);
+                } while (c.moveToNext());
 
-            db.close();
+                db.close();
 
-            review[] ret = new review[reviews.size()];
-            reviews.toArray(ret);
+                review[] ret = new review[reviews.size()];
+                reviews.toArray(ret);
 
-            return ret;
+                return ret;
+            }
+
+            return null;
         } catch(Exception e){
             c.close();
 
@@ -504,8 +502,6 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             if (c != null)
                 c.close();
-
-            db.close();
         }
     }
 }
