@@ -207,7 +207,7 @@ public class AddTrip extends AppCompatActivity {
         } finally {
             fos.close();
         }
-        return directory.getAbsolutePath();
+        return directory.getAbsolutePath()+String.valueOf(iPic)+".jpg";
     }
 
     @Override
