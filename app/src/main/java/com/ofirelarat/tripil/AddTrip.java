@@ -47,11 +47,11 @@ public class AddTrip extends AppCompatActivity {
         setContentView(R.layout.activity_add_trip);
 
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-    //    if(sharedPreferences.getString("NameKey",null)==null) {
-      //      Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
-        //    Intent i = new Intent(getApplicationContext(), login.class);
-          //  startActivity(i);
-        //}
+        if(sharedPreferences.getString("NameKey",null)==null) {
+            Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(getApplicationContext(), login.class);
+            startActivity(i);
+        }
 
         int iPic=sharedPreferences.getInt(picName, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();

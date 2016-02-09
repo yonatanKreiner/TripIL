@@ -260,31 +260,41 @@ public class DBHelper extends SQLiteOpenHelper {
         );
 
         db.close();
-        c.moveToFirst();
-        List<Trip> trips = new ArrayList<>();
+        try{
+            if (c != null && c.moveToNext()){
+                List<Trip> trips = new ArrayList<>();
 
-        do {
-            Trip t = new Trip(
-                    c.getInt(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3),
-                    c.getString(4),
-                    c.getString(5),
-                    c.getString(6),
-                    c.getString(9),
-                    c.getString(10),
-                    c.getString(11)
-            );
+                do {
+                    Trip t = new Trip(
+                            c.getInt(0),
+                            c.getString(1),
+                            c.getString(2),
+                            c.getString(3),
+                            c.getString(4),
+                            c.getString(5),
+                            c.getString(6),
+                            c.getString(9),
+                            c.getString(10),
+                            c.getString(11)
+                    );
 
-            t.setStars(Integer.getInteger(c.getString(7)));
-            t.setNumOfRates(Integer.getInteger(c.getString(8)));
-            trips.add(t);
-        } while(c.moveToNext());
+                    t.setStars(Integer.getInteger(c.getString(7)));
+                    t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                    trips.add(t);
+                } while(c.moveToNext());
 
-        c.close();
+                return (Trip[]) trips.toArray();
+            }
 
-        return (Trip[]) trips.toArray();
+            return null;
+        } catch(Exception e){
+            c.close();
+
+            return null;
+        } finally {
+            if (c != null)
+                c.close();
+        }
     }
 
     //update trip
