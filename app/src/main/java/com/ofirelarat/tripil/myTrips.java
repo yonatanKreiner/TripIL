@@ -1,11 +1,17 @@
 package com.ofirelarat.tripil;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -24,6 +30,7 @@ public class myTrips extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(52, 152, 219)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -33,11 +40,51 @@ public class myTrips extends AppCompatActivity {
         });
 
         db = new DBHelper(this);
-        listview = (ListView) findViewById(R.id.listView);
+        listview = (ListView) findViewById(R.id.ListView1);
         Trip[] trips = db.FindTripsByUser(sharedPreferences.getString("NameKey", null));
 
         if(trips != null) {
             listview.setAdapter(new CostumAdapter(this, trips));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        MenuItem menuItemT = menu.findItem(R.id.MyTrips);
+        menuItemT.setVisible(false);
+        if (sharedPreferences.getString("NameKey", null) != null) {
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogOut");
+        }
+        else{
+            MenuItem menuItem = menu.findItem(R.id.logIn);
+            menuItem.setTitle("LogIn");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
+        switch (item.getItemId()){
+            case R.id.back:
+                i = new Intent(getApplicationContext(), trips.class);
+                startActivity(i);
+                return true;
+            case R.id.logIn:
+                i = new Intent(getApplicationContext(), login.class);
+                startActivity(i);
+                return true;
+            case R.id.MyTrips:
+                i = new Intent(getApplicationContext(), myTrips.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
     }
 

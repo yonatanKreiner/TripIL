@@ -222,6 +222,8 @@ public class AddTrip extends AppCompatActivity {
         else{
             MenuItem menuItem = menu.findItem(R.id.logIn);
             menuItem.setTitle("LogIn");
+            MenuItem menuItemT = menu.findItem(R.id.MyTrips);
+            menuItemT.setVisible(false);
         }
         return true;
     }
@@ -236,6 +238,10 @@ public class AddTrip extends AppCompatActivity {
                     return true;
             case R.id.logIn:
                  i = new Intent(getApplicationContext(), login.class);
+                startActivity(i);
+                return true;
+            case R.id.MyTrips:
+                i = new Intent(getApplicationContext(), myTrips.class);
                 startActivity(i);
                 return true;
             default:
