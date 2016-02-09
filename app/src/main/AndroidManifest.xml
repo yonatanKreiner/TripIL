@@ -63,7 +63,10 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-
+        <activity
+            android:name=".myTrips"
+            android:label="@string/title_activity_my_trips"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
