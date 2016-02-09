@@ -85,9 +85,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean AddTrip(Trip trip) {
-        db = getWritableDatabase();
-
         if(FindTripsById(trip.id) == null) {
+            db = getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(DBContract.DBTrip.COLUMN_NAME_USERNAME, trip.getUsername());
             values.put(DBContract.DBTrip.COLUMN_NAME_ARRAIVAL, trip.getArrivalDate());
@@ -140,8 +139,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 null                                      // The sort order
         );
 
-        db.close();
-
         try{
             if (c != null && c.moveToNext()){
                 List<Trip> trips = new ArrayList<>();
@@ -160,11 +157,12 @@ public class DBHelper extends SQLiteOpenHelper {
                             c.getString(11)
                     );
 
-                    t.setStars(Integer.getInteger(c.getString(7)));
-                    t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                    t.setStars(c.getFloat(7));
+                    t.setNumOfRates(c.getInt(8));
                     trips.add(t);
                 } while(c.moveToNext());
 
+                db.close();
 
                 return (Trip[])trips.toArray();
             }
@@ -210,8 +208,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 null                                      // The sort order
         );
 
-        db.close();
-
         try{
             if (c != null && c.moveToNext()){
                 Trip t = new Trip(
@@ -229,6 +225,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 t.setStars(Integer.getInteger(c.getString(7)));
                 t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                db.close();
 
                 return t;
             }
@@ -275,7 +272,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
 
-        db.close();
         try{
             if (c != null && c.moveToNext()){
                 List<Trip> trips = new ArrayList<>();
@@ -294,10 +290,12 @@ public class DBHelper extends SQLiteOpenHelper {
                             c.getString(11)
                     );
 
-                    t.setStars(Integer.getInteger(c.getString(7)));
-                    t.setNumOfRates(Integer.getInteger(c.getString(8)));
+                    t.setStars(c.getFloat(7));
+                    t.setNumOfRates(c.getInt(8));
                     trips.add(t);
                 } while(c.moveToNext());
+
+                db.close();
 
                 return (Trip[]) trips.toArray();
             }
@@ -342,9 +340,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean AddUser(User user) {
-        db = getWritableDatabase();
-
         if(FindUser(user.username, user.password) == null){
+            db = getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(DBContract.DBUser.COLUMN_NAME_USERNAME, user.username);
             values.put(DBContract.DBUser.COLUMN_NAME_PASSWORD, user.password);
@@ -353,7 +350,7 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(DBContract.DBUser.COLUMN_NAME_MAIL, user.mail);
             values.put(DBContract.DBUser.COLUMN_NAME_PHONE, user.phone);
 
-            long newRowId = db.insert(DBContract.DBUser.TABLE_NAME, null, values);
+            db.insert(DBContract.DBUser.TABLE_NAME, null, values);
             db.close();
 
             return true;
@@ -390,20 +387,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 null                                 // The sort order
         );
 
-        if(c.getCount() > 0) {
-            c.moveToFirst();
 
-            return new User(
-                    c.getString(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3),
-                    c.getString(4),
-                    c.getString(5)
-            );
+        try{
+            if (c != null && c.moveToNext()){
+                return new User(
+                        c.getString(0),
+                        c.getString(1),
+                        c.getString(2),
+                        c.getString(3),
+                        c.getString(4),
+                        c.getString(5)
+                );
+            }
+
+            return null;
+        } catch(Exception e){
+            c.close();
+
+            return null;
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-
-        return null;
     }
 
     //update trip
@@ -446,7 +452,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public review FindReviewByTripId(int id){
+    public review[] FindReviewByTripId(int id){
         db = getReadableDatabase();
 
         String[] projection = {
@@ -468,15 +474,22 @@ public class DBHelper extends SQLiteOpenHelper {
                 null                                 // The sort order
         );
 
-        try{
-            if (c != null && c.moveToNext()) {
-                return new review(
+        try {
+            List<review> reviews = new ArrayList<>();
+
+            do {
+                review r = new review(
                         c.getInt(0),
                         c.getString(1),
                         c.getString(2)
                 );
-            }
-            return null;
+
+                reviews.add(r);
+            } while (c.moveToNext());
+
+            db.close();
+
+            return (review[]) reviews.toArray();
         } catch(Exception e){
             c.close();
 
@@ -484,6 +497,8 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             if (c != null)
                 c.close();
+
+            db.close();
         }
     }
 }

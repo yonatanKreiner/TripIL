@@ -50,7 +50,7 @@ public class AddTrip extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
-
+        db = new DBHelper(this);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         if(sharedPreferences.getString("NameKey",null)==null) {
             Toast.makeText(getApplicationContext(), "you have to loged in first", Toast.LENGTH_LONG).show();
