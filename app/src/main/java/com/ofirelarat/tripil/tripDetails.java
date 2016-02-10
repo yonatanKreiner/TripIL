@@ -1,19 +1,15 @@
 package com.ofirelarat.tripil;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +18,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class tripDetails extends AppCompatActivity {
+public class tripDetails extends AppCompatActivity implements DAL.AsyncListener{
     TextView name;
     TextView date;
     TextView hotels;
@@ -42,6 +42,8 @@ public class tripDetails extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Name = "NameKey";
     DBHelper db;
+    private List<Hotel> hotelsDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,12 @@ public class tripDetails extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), trips.class);
             startActivity(intent);
         }
+
+        for (String hotel:trip.getHotels()) {
+            new DAL("Hotels", hotel, this).execute();
+        }
+
+
         name.setText(trip.getUsername());
         date.setText(trip.getArrivalDate()+"-"+trip.getReturnDate());
         hotels.setText(Common.ArrayToString(trip.getHotels()));
@@ -122,19 +130,19 @@ public class tripDetails extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(trip.getHotels()[i[0]]);
         builder.setCancelable(true)
-                .setMessage("blablabla")
+                .setMessage(Common.GetStringFromMap(hotelsDetails.get(0).getAttributes()))
                 .setPositiveButton("next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                    })
+                })
                             .setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                        startActivity(intent);
-                    }
-                });
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
         final AlertDialog dialog=builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -153,17 +161,17 @@ public class tripDetails extends AppCompatActivity {
 
     public void onClickSend(View view){
         String reviewE=((EditText)findViewById(R.id.editText)).getText().toString();
-        if(reviewE.isEmpty())
-            return;
         review r=new review(trip.getId(),sharedPreferences.getString("NameKey", null),reviewE);
         db.AddReview(r);
 
         ListView listview = (ListView) findViewById(R.id.listView);
         review[] rs = db.FindReviewByTripId(trip.getId());
+
         if(rs != null) {
             listview.setAdapter(new CostumAdapterReview(this, rs));
-            ((EditText)findViewById(R.id.editText)).setText("");
-       }
+        }
+
+        ((EditText)findViewById(R.id.editText)).setText("");
     }
 
     @Override
@@ -203,6 +211,32 @@ public class tripDetails extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+
+    @Override
+    public void updateData(JSONArray fields, JSONArray records) {
+        try {
+            JSONObject temp;
+            Map<String, String> map = new HashMap<String, String>();
+
+            for (int i = 0; i < records.length(); i++) {
+                temp = records.getJSONObject(i);
+                map.put(temp.getString("SpecificationAttributeName"), temp.getString("CustomValue"));
+                /*switch (records.getString(i)){
+                    case "Shortdescription":
+                    case "Shortdescription":
+                    case "Shortdescription":
+                    case "Shortdescription":
+                    case "Shortdescription":
+                    case "Shortdescription":
+                    case "rank":
+                }*/
+            }
+            Hotel help = new Hotel(map);
+            hotelsDetails.add(help);
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

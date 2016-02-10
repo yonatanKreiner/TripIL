@@ -1,15 +1,30 @@
 package com.ofirelarat.tripil;
 
 import java.util.Dictionary;
+import java.util.Map;
 
 public class Hotel {
-    int productKey;
-    String name;
-    String phone;
-    String cellPhone;
-    String website;
-    Dictionary<String, String> attributes;
-    String description;
+    private int productKey;
+    private String name;
+    private String phone;
+    private String cellPhone;
+    private String website;
+    private Map<String, String> attributes;
+    private String description;
+
+    public Hotel( Map<String, String> attributes){
+        this.attributes = attributes;
+    }
+
+    public Hotel(int productKey, String name, String phone, String cellPhone, String website, Map<String, String> attributes, String description) {
+        this.productKey = productKey;
+        this.name = name;
+        this.phone = phone;
+        this.cellPhone = cellPhone;
+        this.website = website;
+        this.attributes = attributes;
+        this.description = description;
+    }
 
     public int getProductKey() {
         return productKey;
@@ -45,6 +60,14 @@ public class Hotel {
 
     public String getWebsite() {
         return website;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
     }
 
     public void setWebsite(String website) {
